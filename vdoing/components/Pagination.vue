@@ -88,153 +88,159 @@
 </template>
 
 <script>
-export default {
-  props: {
-    total: { // 总长度
-      type: Number,
-      default: 10
+  export default {
+    props: {
+      total: {
+        // 总长度
+        type: Number,
+        default: 10,
+      },
+      perPage: {
+        // 每页长
+        type: Number,
+        default: 10,
+      },
+      currentPage: {
+        // 当前页
+        type: Number,
+        default: 1,
+      },
     },
-    perPage: { // 每页长
-      type: Number,
-      default: 10
+    computed: {
+      pages() {
+        // 总页数
+        return Math.ceil(this.total / this.perPage);
+      },
     },
-    currentPage: { // 当前页
-      type: Number,
-      default: 1
-    }
-  },
-  computed: {
-    pages() { // 总页数
-      return Math.ceil(this.total / this.perPage)
-    }
-  },
-  methods: {
-    threeNum() { // 三号位页码计算
-      let num = 3
-      const currentPage = this.currentPage
-      const pages = this.pages
-      if (currentPage < 3) {
-        num = 3
-      } else if (currentPage > (pages - 3)) {
-        num = pages - 2
-      } else {
-        num = currentPage
-      }
-      return num
+    methods: {
+      threeNum() {
+        // 三号位页码计算
+        let num = 3;
+        const currentPage = this.currentPage;
+        const pages = this.pages;
+        if (currentPage < 3) {
+          num = 3;
+        } else if (currentPage > pages - 3) {
+          num = pages - 2;
+        } else {
+          num = currentPage;
+        }
+        return num;
+      },
+      goPrex() {
+        let currentPage = this.currentPage;
+        if (currentPage > 1) {
+          this.handleEmit(--currentPage);
+        }
+      },
+      goNext() {
+        let currentPage = this.currentPage;
+        if (currentPage < this.pages) {
+          this.handleEmit(++currentPage);
+        }
+      },
+      goIndex(i) {
+        if (i !== this.currentPage) {
+          this.handleEmit(i);
+        }
+      },
+      handleEmit(i) {
+        this.$emit("getCurrentPage", i);
+      },
     },
-    goPrex() {
-      let currentPage = this.currentPage
-      if (currentPage > 1) {
-        this.handleEmit(--currentPage)
-      }
-    },
-    goNext() {
-      let currentPage = this.currentPage
-      if (currentPage < this.pages) {
-        this.handleEmit(++currentPage)
-      }
-    },
-    goIndex(i) {
-      if (i !== this.currentPage) {
-        this.handleEmit(i)
-      }
-    },
-    handleEmit(i) {
-      this.$emit('getCurrentPage', i)
-    }
-  }
-}
+  };
 </script>
 
-<style lang='stylus'>
-.pagination
-  position relative
-  height 60px
-  text-align center
-  @media (max-width 720px)
-    margin-left 1px
-    margin-right 1px
-  span
-    line-height 1rem
-    opacity 0.9
-    cursor pointer
-    &:hover
-      color $accentColor
-    &.ellipsis
-      opacity 0.5
-      &::before
-        content '...'
-        font-size 1.2rem
-      @media (any-hover hover)
-        &.ell-two
-          &:hover
-            &::before
-              content '«'
-        &.ell-four
-          &:hover
-            &::before
-              content '»'
-  > span
-    position absolute
-    top 0
-    padding 1rem 1.2rem
-    font-size 0.95rem
-    &::before
-      font-size 0.4rem
-    &.disabled
-      color rgba(125, 125, 125, 0.5)
-    &.prev
-      left 0
-      // border-top-right-radius 32px
-      // border-bottom-right-radius 32px
-      &::before
-        margin-right 0.3rem
-    &.next
-      right 0
-      // border-top-left-radius 32px
-      // border-bottom-left-radius 32px
-      &::before
-        float right
-        margin-left 0.3rem
-    p
-      display inline
-      line-height 0.95rem
-  .pagination-list
+<style lang="stylus">
+  .pagination
+    position relative
+    height 60px
+    text-align center
+    @media (max-width 720px)
+      margin-left 1px
+      margin-right 1px
     span
-      display inline-block
-      width 2.5rem
-      height 2.5rem
-      line-height 2.5rem
-      margin 0.3rem
-      &.active
-        background $accentColor
-        color var(--mainBg)
-@media (max-width 800px)
-  .pagination
+      line-height 1rem
+      opacity 0.9
+      cursor pointer
+      &:hover
+        color $accentColor
+      &.ellipsis
+        opacity 0.5
+        &::before
+          content '...'
+          font-size 1.2rem
+        @media (any-hover hover)
+          &.ell-two
+            &:hover
+              &::before
+                content '«'
+          &.ell-four
+            &:hover
+              &::before
+                content '»'
     > span
-      padding 1rem 1.5rem
+      position absolute
+      top 0
+      padding 1rem 1.2rem
+      font-size 0.95rem
+      &::before
+        font-size 0.4rem
+      &.disabled
+        color rgba(125, 125, 125, 0.5)
+      &.prev
+        left 0
+        // border-top-right-radius 32px
+        // border-bottom-right-radius 32px
+        &::before
+          float left
+          margin-right 0.3rem
+      &.next
+        right 0
+        // border-top-left-radius 32px
+        // border-bottom-left-radius 32px
+        &::before
+          float right
+          margin-left 0.3rem
       p
-        display none
-// 719px
-@media (max-width $MQMobile)
-  .pagination
-    > span // 左右按钮
-      padding 0.9rem 1.5rem
+        display inline
+        line-height 0.95rem
     .pagination-list
       span
-        width 2.3rem
-        height 2.3rem
-        line-height 2.3rem
-        margin 0.25rem
-@media (max-width 390px)
-  .pagination
-    > span // 左右按钮
-      padding 0.8rem 1.3rem
-    .pagination-list
-      span
-        width 2rem
-        height 2rem
-        line-height 2rem
-        margin 0.1rem
-        margin-top 0.3rem
+        display inline-block
+        width 2.5rem
+        height 2.5rem
+        line-height 2.5rem
+        margin 0.3rem
+        &.active
+          background $accentColor
+          color var(--mainBg)
+  @media (max-width 800px)
+    .pagination
+      > span
+        padding 1rem 1.5rem
+        p
+          display none
+  // 719px
+  @media (max-width $MQMobile)
+    .pagination
+      > span // 左右按钮
+        padding 0.9rem 1.5rem
+      .pagination-list
+        span
+          width 2.3rem
+          height 2.3rem
+          line-height 2.3rem
+          margin 0.25rem
+  @media (max-width 390px)
+    .pagination
+      > span // 左右按钮
+        padding 0.8rem 1.3rem
+      .pagination-list
+        span
+          width 2rem
+          height 2rem
+          line-height 2rem
+          margin 0.1rem
+          margin-top 0.3rem
 </style>
