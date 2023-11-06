@@ -1,5 +1,1 @@
-# 我的个人博客
-
-## 生成器：vuepress
-
-## 配置说明
+## Hubery's blog

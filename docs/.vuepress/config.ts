@@ -23,10 +23,15 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       description: "欢迎访问我的博客",
     },
   },
-  base: "/my-blog-new/", // 默认'/'。如果你想将你的网站部署到如 https://foo.github.io/bar/，那么 base 应该被设置成 "/bar/",（否则页面将失去样式等文件）
+  // base: "//", // 默认'/'。如果你想将你的网站部署到如 https://foo.github.io/bar/，那么 base 应该被设置成 "/bar/",（否则页面将失去样式等文件）
 
   // 主题配置
   themeConfig: {
+    // algolia: {
+    //   apiKey: "20e3c22cdae0c9416c813904ef5f62a9",
+    //   indexName: "huberyyang-gitee",
+    //   appId: "WOEXURDK5F",
+    // },
     // 导航配置
     nav: [
       { text: "首页", link: "/" },
@@ -138,7 +143,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
     // 博主信息 (显示在首页侧边栏)
     blogger: {
-      avatar: "/img/avatar.jpg",
+      avatar: "/logo.png",
       name: "HuberyYang",
       slogan: "勤靡余劳，心有常闲",
     },
@@ -234,7 +239,6 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
     // 全文搜索。 ⚠️注意：此插件会在打开网站时多加载部分js文件用于搜索，导致初次访问网站变慢。如在意初次访问速度的话可以不使用此插件！（推荐：vuepress-plugin-thirdparty-search）
     // 'fulltext-search',
-
     // 可以添加第三方搜索链接的搜索框（继承原官方搜索框的配置参数）
     [
       "thirdparty-search",
@@ -246,21 +250,17 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
             behindUrl: "", // 搜索链接的后面部分，可选，默认 ''
           },
           {
-            title: "在Runoob中搜索",
-            frontUrl: "https://www.runoob.com/?s=",
+            title: "在百度中搜索",
+            frontUrl: "http://www.baidu.com/baidu?word=",
           },
           {
-            title: "在Vue API中搜索",
-            frontUrl: "https://cn.vuejs.org/v2/api/#",
+            title: "在Google中搜索",
+            frontUrl: "https://www.google.com/search?q=",
           },
           {
             title: "在Bing中搜索",
             frontUrl: "https://cn.bing.com/search?q=",
           },
-          // {
-          //   title: "通过百度搜索本站的",
-          //   frontUrl: `https://www.baidu.com/s?wd=site%3A${DOMAIN_NAME}%20`,
-          // },
         ],
       },
     ],
