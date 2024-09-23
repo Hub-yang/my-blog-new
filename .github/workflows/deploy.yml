@@ -18,11 +18,11 @@ jobs:
       - name: Install dependencies and build # 安装依赖，打包
         run: |
           npx npm install
-          npx pnpm run build
+          npx npm run build
 
       - name: Compressed file # 压缩dist目录下文件和目录
         run: |
-          tar -czf dist.tar.gz -C dist .
+          tar -czf dist.tar.gz -C docs/.vuepress/dist .
 
       - name: Copy file via ssh password # 连接服务器并将压缩包拷贝至指定目录
         uses: appleboy/scp-action@v0.1.7
