@@ -6,6 +6,7 @@ import { defineConfig4CustomTheme, UserPlugins } from "vuepress/config";
 import { VdoingThemeConfig } from "vuepress-theme-vdoing/types";
 import dayjs from "dayjs";
 import baiduCode from "./config/baiduCode"; // 百度统计hm码
+import { NAV } from "./config/catalogue";
 // import htmlModules from "./config/htmlModules"; // 自定义插入的html块
 
 // 后期部署生成ip后进行修改
@@ -33,64 +34,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     //   appId: "WOEXURDK5F",
     // },
     // 导航配置
-    nav: [
-      { text: "首页", link: "/" },
-      {
-        text: "前端",
-        link: "/web/", //目录页链接，此处link是vdoing主题新增的配置项，有二级导航时，可以点击一级导航跳到目录页
-        items: [
-          // 说明：以下所有link的值只是在相应md文件头部定义的永久链接（不是什么特殊编码）。另外，注意结尾是有斜杠的
-          {
-            text: "JavaScript",
-            items: [
-              { text: "33个实用JavaScript一行代码", link: "/pages/a61298/" },
-              { text: "new命令原理", link: "/pages/8143cc480faf9a11/" },
-            ],
-          },
-          {
-            text: "学习笔记",
-            items: [{ text: "《JavaScript教程》", link: "/note/javascript/" }],
-          },
-        ],
-      },
-      {
-        text: "刷题",
-        link: "/ui/",
-        items: [
-          {
-            text: "简单",
-            items: [{ text: "搜索插入位置", link: "/pages/8309a5b876fc95e3/" }],
-          },
-          { text: "中等", link: "javascript:;" },
-        ],
-      },
-      {
-        text: "读书",
-        link: "/technology/",
-        items: [
-          { text: "《自控力》读书笔记", link: "/pages/9a7ee40fc232253e" },
-        ],
-      },
-      // {
-      //   text: "杂谈",
-      //   link: "/more/",
-      //   items: [
-      //     { text: "学习", link: "/pages/f2a556/" },
-      //     { text: "面试", link: "/pages/aea6571b7a8bae86/" },
-      //     { text: "心情杂货", link: "/pages/2d615df9a36a98ed/" },
-      //     { text: "实用技巧", link: "/pages/baaa02/" },
-      //   ],
-      // },
-      {
-        text: "索引",
-        link: "/archives/",
-        items: [
-          { text: "分类", link: "/categories/" },
-          { text: "标签", link: "/tags/" },
-          { text: "归档", link: "/archives/" },
-        ],
-      },
-    ],
+    nav:NAV, 
     sidebarDepth: 2, // 侧边栏显示深度，默认1，最大2（显示到h3标题）
     logo: "/img/avatar.png", // 导航栏logo
     repo: "Hub-yang", // 导航栏右侧生成Github链接
@@ -144,7 +88,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     // 博主信息 (显示在首页侧边栏)
     blogger: {
       avatar: "/logo.png",
-      name: "HuberyYang",
+      name: "Hubery Yang",
       slogan: "勤靡余劳，心有常闲",
     },
 
@@ -154,7 +98,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       icons: [
         {
           iconClass: "icon-youjian",
-          title: "发邮件",
+          title: "email",
           link: "mailto:18830279823@163.com",
         },
         {
