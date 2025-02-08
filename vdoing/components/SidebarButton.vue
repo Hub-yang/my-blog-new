@@ -1,8 +1,8 @@
 <template>
   <div
     class="sidebar-button"
-    @click="$emit('toggle-sidebar')"
     title="目录"
+    @click="$emit('toggle-sidebar')"
   >
     <svg
       class="icon"

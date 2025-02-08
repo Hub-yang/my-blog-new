@@ -1,68 +1,3 @@
-<template>
-  <div class="articleInfo-wrap">
-    <div class="articleInfo">
-      <!-- 面包屑 -->
-      <ul class="breadcrumbs" v-if="classify1 && classify1 !== '_posts'">
-        <li>
-          <router-link to="/" class="iconfont icon-home" title="首页" />
-        </li>
-
-        <li v-for="item in classifyList" :key="item">
-          <!-- 跳目录页 -->
-          <router-link v-if="cataloguePermalink" :to="getLink(item)">{{
-            item
-          }}</router-link>
-          <!-- 跳分类页 -->
-          <router-link
-            v-else-if="$themeConfig.category !== false"
-            :to="`/categories/?category=${encodeURIComponent(item)}`"
-            title="分类"
-            >{{ item }}</router-link
-          >
-          <!-- 没有跳转 -->
-          <span v-else>{{ item }}</span>
-        </li>
-      </ul>
-
-      <!-- 作者&日期 -->
-      <div class="info">
-        <div class="author iconfont icon-touxiang" title="作者" v-if="author">
-          <a
-            :href="author.href || author.link"
-            v-if="
-              author.href || (author.link && typeof author.link === 'string')
-            "
-            target="_blank"
-            class="beLink"
-            title="作者"
-            >{{ author.name }}</a
-          >
-          <a v-else href="javascript:;">{{ author.name || author }}</a>
-        </div>
-        <div class="date iconfont icon-riqi" title="创建时间" v-if="date">
-          <a href="javascript:;">{{ date }}</a>
-        </div>
-        <div
-          class="date iconfont icon-wenjian"
-          title="分类"
-          v-if="
-            $themeConfig.category !== false &&
-            !(classify1 && classify1 !== '_posts') &&
-            categories
-          "
-        >
-          <router-link
-            :to="`/categories/?category=${encodeURIComponent(item)}`"
-            v-for="(item, index) in categories"
-            :key="index"
-            >{{ item + ' ' }}</router-link
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 export default {
   data() {
@@ -72,17 +7,17 @@ export default {
       classifyList: [],
       cataloguePermalink: '',
       author: null,
-      categories: []
+      categories: [],
     }
+  },
+  watch: {
+    '$route.path': function () {
+      this.classifyList = []
+      this.getPageInfo()
+    },
   },
   created() {
     this.getPageInfo()
-  },
-  watch: {
-    '$route.path'() {
-      this.classifyList = []
-      this.getPageInfo()
-    }
   },
   methods: {
     getPageInfo() {
@@ -101,8 +36,9 @@ export default {
         if (index !== relativePathArr.length - 1) {
           if (nameArr === 1) {
             this.classifyList.push(nameArr[0])
-          } else {
-            const firstDotIndex = item.indexOf('.');
+          }
+          else {
+            const firstDotIndex = item.indexOf('.')
             this.classifyList.push(item.substring(firstDotIndex + 1) || '')
           }
         }
@@ -112,7 +48,7 @@ export default {
 
       const cataloguePermalink = sidebar && sidebar.catalogue ? sidebar.catalogue[this.classify1] : ''// 目录页永久链接
       const author = this.$frontmatter.author || this.$themeConfig.author // 作者
-      let date = (pageInfo.frontmatter.date || '').split(' ')[0] // 文章创建时间
+      const date = (pageInfo.frontmatter.date || '').split(' ')[0] // 文章创建时间
 
       // 获取页面frontmatter的分类（碎片化文章使用）
       const { categories } = this.$frontmatter
@@ -131,11 +67,79 @@ export default {
       return `${cataloguePermalink}${cataloguePermalink.charAt(cataloguePermalink.length - 1) === '/'
         ? ''
         : '/'
-        }#${item}`
-    }
-  }
+      }#${item}`
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="articleInfo-wrap">
+    <div class="articleInfo">
+      <!-- 面包屑 -->
+      <ul v-if="classify1 && classify1 !== '_posts'" class="breadcrumbs">
+        <li>
+          <router-link to="/" class="iconfont icon-home" title="首页" />
+        </li>
+
+        <li v-for="item in classifyList" :key="item">
+          <!-- 跳目录页 -->
+          <router-link v-if="cataloguePermalink" :to="getLink(item)">
+            {{
+              item
+            }}
+          </router-link>
+          <!-- 跳分类页 -->
+          <router-link
+            v-else-if="$themeConfig.category !== false"
+            :to="`/categories/?category=${encodeURIComponent(item)}`"
+            title="分类"
+          >
+            {{ item }}
+          </router-link>
+          <!-- 没有跳转 -->
+          <span v-else>{{ item }}</span>
+        </li>
+      </ul>
+
+      <!-- 作者&日期 -->
+      <div class="info">
+        <div v-if="author" class="author iconfont icon-touxiang" title="作者">
+          <a
+            v-if="
+              author.href || (author.link && typeof author.link === 'string')
+            "
+            :href="author.href || author.link"
+            target="_blank"
+            class="beLink"
+            title="作者"
+          >{{ author.name }}</a>
+          <a v-else href="javascript:;">{{ author.name || author }}</a>
+        </div>
+        <div v-if="date" class="date iconfont icon-riqi" title="创建时间">
+          <a href="javascript:;">{{ date }}</a>
+        </div>
+        <div
+          v-if="
+            $themeConfig.category !== false
+              && !(classify1 && classify1 !== '_posts')
+              && categories
+          "
+          class="date iconfont icon-wenjian"
+          title="分类"
+        >
+          <router-link
+            v-for="(item, index) in categories"
+            :key="index"
+            :to="`/categories/?category=${encodeURIComponent(item)}`"
+          >
+            {{ `${item} ` }}
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style lang='stylus' scoped>
 @require '../styles/wrapper.styl'

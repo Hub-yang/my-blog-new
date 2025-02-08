@@ -9,6 +9,7 @@
     </div>
   </div>
 </template>
+
 <style lang="stylus">
 .main-wrapper
   margin 1.5rem auto 0 auto

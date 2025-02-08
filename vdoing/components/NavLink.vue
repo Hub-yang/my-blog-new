@@ -1,27 +1,5 @@
-<template>
-  <router-link
-    class="nav-link"
-    :to="link"
-    @focusout.native="focusoutAction"
-    v-if="!isExternal(link)"
-    :exact="exact"
-    >{{ item.text }}</router-link
-  >
-  <a
-    v-else
-    :href="link"
-    @focusout="focusoutAction"
-    class="nav-link external"
-    :target="isMailto(link) || isTel(link) ? null : '_blank'"
-    :rel="isMailto(link) || isTel(link) ? null : 'noopener noreferrer'"
-  >
-    {{ item.text }}
-    <OutboundLink />
-  </a>
-</template>
-
 <script>
-import { isExternal, isMailto, isTel, ensureExt } from "../util"
+import { ensureExt, isExternal, isMailto, isTel } from '../util'
 
 export default {
   props: {
@@ -37,11 +15,11 @@ export default {
 
     exact() {
       if (this.$site.locales) {
-        return Object.keys(this.$site.locales).some(
-          (rootLink) => rootLink === this.link
+        return Object.keys(this.$site.locales).includes(
+          this.link,
         )
       }
-      return this.link === "/"
+      return this.link === '/'
     },
   },
 
@@ -50,8 +28,31 @@ export default {
     isMailto,
     isTel,
     focusoutAction() {
-      this.$emit("focusout")
+      this.$emit('focusout')
     },
   },
 }
 </script>
+
+<template>
+  <router-link
+    v-if="!isExternal(link)"
+    class="nav-link"
+    :to="link"
+    :exact="exact"
+    @focusout.native="focusoutAction"
+  >
+    {{ item.text }}
+  </router-link>
+  <a
+    v-else
+    :href="link"
+    class="nav-link external"
+    :target="isMailto(link) || isTel(link) ? null : '_blank'"
+    :rel="isMailto(link) || isTel(link) ? null : 'noopener noreferrer'"
+    @focusout="focusoutAction"
+  >
+    {{ item.text }}
+    <OutboundLink />
+  </a>
+</template>

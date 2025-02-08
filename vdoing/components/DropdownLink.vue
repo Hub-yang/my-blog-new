@@ -1,3 +1,56 @@
+<script>
+import DropdownTransition from '@theme/components/DropdownTransition.vue'
+import NavLink from '@theme/components/NavLink.vue'
+import last from 'lodash/last'
+
+export default {
+  components: { NavLink, DropdownTransition },
+
+  props: {
+    item: {
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      open: false,
+      isMQMobile: false,
+    }
+  },
+
+  computed: {
+    dropdownAriaLabel() {
+      return this.item.ariaLabel || this.item.text
+    },
+  },
+
+  watch: {
+    $route() {
+      this.open = false
+    },
+  },
+  beforeMount() {
+    this.isMQMobile = window.innerWidth < 720
+
+    window.addEventListener('resize', () => {
+      this.isMQMobile = window.innerWidth < 720
+    })
+  },
+  methods: {
+    toggle() {
+      if (this.isMQMobile) {
+        this.open = !this.open
+      }
+    },
+
+    isLastItemOfArray(item, array) {
+      return last(array) === item
+    },
+  },
+}
+</script>
+
 <template>
   <div class="dropdown-wrapper" :class="{ open }">
     <button
@@ -6,102 +59,53 @@
       :aria-label="dropdownAriaLabel"
       @click="toggle"
     >
-      <router-link v-if="item.link" :to="item.link" class="link-title">{{
-        item.text
-      }}</router-link>
-      <span class="title" v-show="!item.link">{{ item.text }}</span>
-      <span class="arrow" :class="open ? 'down' : 'right'"></span>
+      <router-link v-if="item.link" :to="item.link" class="link-title">
+        {{
+          item.text
+        }}
+      </router-link>
+      <span v-show="!item.link" class="title">{{ item.text }}</span>
+      <span class="arrow" :class="open ? 'down' : 'right'" />
     </button>
 
     <DropdownTransition>
-      <ul class="nav-dropdown" v-show="open">
+      <ul v-show="open" class="nav-dropdown">
         <li
-          class="dropdown-item"
-          :key="subItem.link || index"
           v-for="(subItem, index) in item.items"
+          :key="subItem.link || index"
+          class="dropdown-item"
         >
-          <h4 v-if="subItem.type === 'links'">{{ subItem.text }}</h4>
+          <h4 v-if="subItem.type === 'links'">
+            {{ subItem.text }}
+          </h4>
 
-          <ul class="dropdown-subitem-wrapper" v-if="subItem.type === 'links'">
+          <ul v-if="subItem.type === 'links'" class="dropdown-subitem-wrapper">
             <li
-              class="dropdown-subitem"
-              :key="childSubItem.link"
               v-for="childSubItem in subItem.items"
+              :key="childSubItem.link"
+              class="dropdown-subitem"
             >
               <NavLink
-                @focusout="
-                  isLastItemOfArray(childSubItem, subItem.items) &&
-                    isLastItemOfArray(subItem, item.items) &&
-                    toggle()
-                "
                 :item="childSubItem"
+                @focusout="
+                  isLastItemOfArray(childSubItem, subItem.items)
+                    && isLastItemOfArray(subItem, item.items)
+                    && toggle()
+                "
               />
             </li>
           </ul>
 
           <NavLink
             v-else
-            @focusout="isLastItemOfArray(subItem, item.items) && toggle()"
             :item="subItem"
+            @focusout="isLastItemOfArray(subItem, item.items) && toggle()"
           />
         </li>
       </ul>
     </DropdownTransition>
   </div>
 </template>
-
-<script>
-import NavLink from '@theme/components/NavLink.vue'
-import DropdownTransition from '@theme/components/DropdownTransition.vue'
-import last from 'lodash/last'
-
-export default {
-  components: { NavLink, DropdownTransition },
-
-  data () {
-    return {
-      open: false,
-      isMQMobile: false
-    }
-  },
-
-  props: {
-    item: {
-      required: true
-    }
-  },
-
-  computed: {
-    dropdownAriaLabel () {
-      return this.item.ariaLabel || this.item.text
-    }
-  },
-  beforeMount () {
-    this.isMQMobile = window.innerWidth < 720 ? true : false;
-
-    window.addEventListener('resize', () => {
-      this.isMQMobile = window.innerWidth < 720 ? true : false;
-    })
-  },
-  methods: {
-    toggle () {
-      if (this.isMQMobile) {
-        this.open = !this.open
-      }
-    },
-
-    isLastItemOfArray (item, array) {
-      return last(array) === item
-    }
-  },
-
-  watch: {
-    $route () {
-      this.open = false
-    }
-  }
-}
-</script>
 
 <style lang="stylus">
 .dropdown-wrapper

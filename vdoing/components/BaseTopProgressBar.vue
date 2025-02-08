@@ -1,19 +1,20 @@
-<template>
-  <div class="scroll-progress" :style="{ width: progressWidth + '%' }"></div>
-</template>
-
 <script>
 export default {
-  name: "BaseTopProgressBar",
+  name: 'BaseTopProgressBar',
   data() {
     return {
       scrollTop: 0,
     }
   },
+  computed: {
+    progressWidth() {
+      return Math.min(this.scrollTop, 100)
+    },
+  },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
@@ -25,13 +26,12 @@ export default {
       this.scrollTop = percent
     },
   },
-  computed: {
-    progressWidth() {
-      return Math.min(this.scrollTop, 100)
-    },
-  },
 }
 </script>
+
+<template>
+  <div class="scroll-progress" :style="{ width: `${progressWidth}%` }" />
+</template>
 
 <style scoped>
 .scroll-progress {

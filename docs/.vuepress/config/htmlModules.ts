@@ -1,6 +1,7 @@
-import { VdoingThemeConfig } from 'vuepress-theme-vdoing/types'
+import type { VdoingThemeConfig } from 'vuepress-theme-vdoing/types'
 
-/** 插入自定义html模块 (可用于插入广告模块等)
+/**
+ * 插入自定义html模块 (可用于插入广告模块等)
  * {
  *   homeSidebarB: htmlString, 首页侧边栏底部
  *
@@ -107,7 +108,6 @@ const htmlModule: VdoingThemeConfig['htmlModules'] = {
   //     `,
 }
 
-
 // const htmlModule = {
 //   homeSidebarB: `<div style="width:100%;height:100px;color:#fff;background: #eee;">自定义模块测试</div>`,
 //   sidebarT: `<div style="width:100%;height:100px;color:#fff;background: #eee;">自定义模块测试</div>`,
@@ -117,6 +117,5 @@ const htmlModule: VdoingThemeConfig['htmlModules'] = {
 //   windowLB: `<div style="width:100%;height:100px;color:#fff;background: #eee;">自定义模块测试</div>`,
 //   windowRB: `<div style="width:100%;height:100px;color:#fff;background: #eee;">自定义模块测试</div>`,
 // }
-
 
 export default htmlModule

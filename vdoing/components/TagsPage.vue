@@ -1,55 +1,40 @@
-<template>
-  <div class="custom-page tags-page">
-    <MainLayout>
-      <template #mainLeft>
-        <TagsBar
-          v-if="$categoriesAndTags.tags.length"
-          :tagsData="$categoriesAndTags.tags"
-          :tag="tag"
-        />
-        <PostList :currentPage="currentPage" :perPage="perPage" :tag="tag" />
-        <Pagination
-          :total="total"
-          :perPage="perPage"
-          :currentPage="currentPage"
-          @getCurrentPage="handlePagination"
-          v-show="Math.ceil(total / perPage) > 1"
-        />
-      </template>
-      <template #mainRight>
-        <TagsBar
-          v-if="$categoriesAndTags.tags.length"
-          :tagsData="$categoriesAndTags.tags"
-          :tag="tag"
-        />
-      </template>
-    </MainLayout>
-  </div>
-</template>
-
 <script>
 import MainLayout from '@theme/components/MainLayout'
-import PostList from '@theme/components/PostList'
 import Pagination from '@theme/components/Pagination'
+import PostList from '@theme/components/PostList'
 import TagsBar from '@theme/components/TagsBar'
 
 export default {
+  components: { MainLayout, PostList, Pagination, TagsBar },
   data() {
     return {
       tag: '',
       total: 0, // 总长
       perPage: 10, // 每页长
-      currentPage: 1// 当前页
+      currentPage: 1, // 当前页
     }
   },
-  components: { MainLayout, PostList, Pagination, TagsBar },
+  watch: {
+    '$route.query.tag': function (tag) {
+      this.tag = tag ? decodeURIComponent(tag) : ''
+
+      if (this.tag) {
+        this.total = this.$groupPosts.tags[this.tag].length
+      }
+      else {
+        this.total = this.$sortPosts.length
+      }
+      this.currentPage = 1
+    },
+  },
   mounted() {
     const queryTag = this.$route.query.tag
 
     if (queryTag) {
       this.tag = queryTag
       this.total = this.$groupPosts.tags[queryTag].length
-    } else {
+    }
+    else {
       this.total = this.$sortPosts.length
     }
     if (this.$route.query.p) {
@@ -59,23 +44,39 @@ export default {
   methods: {
     handlePagination(i) { // 分页
       this.currentPage = i
-    }
+    },
   },
-  watch: {
-    '$route.query.tag'(tag) {
-      this.tag = tag ? decodeURIComponent(tag) : ''
-
-      if (this.tag) {
-        this.total = this.$groupPosts.tags[this.tag].length
-      } else {
-        this.total = this.$sortPosts.length
-      }
-      this.currentPage = 1
-
-    }
-  }
 }
 </script>
+
+<template>
+  <div class="custom-page tags-page">
+    <MainLayout>
+      <template #mainLeft>
+        <TagsBar
+          v-if="$categoriesAndTags.tags.length"
+          :tags-data="$categoriesAndTags.tags"
+          :tag="tag"
+        />
+        <PostList :current-page="currentPage" :per-page="perPage" :tag="tag" />
+        <Pagination
+          v-show="Math.ceil(total / perPage) > 1"
+          :total="total"
+          :per-page="perPage"
+          :current-page="currentPage"
+          @get-current-page="handlePagination"
+        />
+      </template>
+      <template #mainRight>
+        <TagsBar
+          v-if="$categoriesAndTags.tags.length"
+          :tags-data="$categoriesAndTags.tags"
+          :tag="tag"
+        />
+      </template>
+    </MainLayout>
+  </div>
+</template>
 
 <style lang='stylus'>
 .tags-page

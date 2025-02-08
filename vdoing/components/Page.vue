@@ -1,76 +1,29 @@
-<template>
-  <div>
-    <main class="page">
-      <div :class="`theme-vdoing-wrapper ${bgStyle}`">
-        <ArticleInfo v-if="isArticle()" />
-        <div v-else class="placeholder" />
-        <component
-          class="theme-vdoing-content"
-          v-if="pageComponent"
-          :is="pageComponent"
-        />
-
-        <div class="content-wrapper">
-          <RightMenu v-if="showRightMenu" />
-
-          <h1 v-if="showTitle">
-            <img
-              :src="currentBadge"
-              v-if="$themeConfig.titleBadge === false ? false : true"
-            />{{ this.$page.title
-            }}<span class="title-tag" v-if="$frontmatter.titleTag">{{
-              $frontmatter.titleTag
-            }}</span>
-          </h1>
-
-          <slot name="top" v-if="isShowSlotT" />
-
-          <Content class="theme-vdoing-content" />
-        </div>
-        <slot name="bottom" v-if="isShowSlotB" />
-        <PageEdit />
-
-        <PageNav v-bind="{ sidebarItems }" />
-      </div>
-
-      <UpdateArticle
-        :length="3"
-        :moreArticle="updateBarConfig && updateBarConfig.moreArticle"
-        v-if="isShowUpdateBar"
-      />
-    </main>
-  </div>
-</template>
-
 <script>
 import PageEdit from '@theme/components/PageEdit.vue'
 import PageNav from '@theme/components/PageNav.vue'
+import TitleBadgeMixin from '../mixins/titleBadge'
 import ArticleInfo from './ArticleInfo.vue'
 import Catalogue from './Catalogue.vue'
-import UpdateArticle from './UpdateArticle.vue'
 import RightMenu from './RightMenu.vue'
 
-import TitleBadgeMixin from '../mixins/titleBadge'
+import UpdateArticle from './UpdateArticle.vue'
 
 export default {
+  components: { PageEdit, PageNav, ArticleInfo, Catalogue, UpdateArticle, RightMenu },
   mixins: [TitleBadgeMixin],
+  props: ['sidebarItems'],
   data() {
     return {
-      updateBarConfig: null
+      updateBarConfig: null,
     }
-  },
-  props: ['sidebarItems'],
-  components: { PageEdit, PageNav, ArticleInfo, Catalogue, UpdateArticle, RightMenu },
-  created() {
-    this.updateBarConfig = this.$themeConfig.updateBar
   },
   computed: {
     bgStyle() {
       const { contentBgStyle } = this.$themeConfig
-      return contentBgStyle ? 'bg-style-' + contentBgStyle : ''
+      return contentBgStyle ? `bg-style-${contentBgStyle}` : ''
     },
     isShowUpdateBar() {
-      return this.updateBarConfig && this.updateBarConfig.showToArticle === false ? false : true
+      return !(this.updateBarConfig && this.updateBarConfig.showToArticle === false)
     },
     showTitle() {
       return !this.$frontmatter.pageComponent
@@ -79,9 +32,9 @@ export default {
       const { $frontmatter, $themeConfig, $page } = this
       const { sidebar } = $frontmatter
       return (
-        $themeConfig.rightMenuBar !== false &&
-        $page.headers &&
-        ($frontmatter && sidebar && sidebar !== false) !== false
+        $themeConfig.rightMenuBar !== false
+        && $page.headers
+        && ($frontmatter && sidebar && sidebar !== false) !== false
       )
     },
     pageComponent() {
@@ -92,26 +45,76 @@ export default {
     },
     isShowSlotB() {
       return this.getShowStatus('pageBshowMode')
-    }
+    },
+  },
+  created() {
+    this.updateBarConfig = this.$themeConfig.updateBar
   },
   methods: {
     getShowStatus(prop) {
       const { htmlModules } = this.$themeConfig
-      if (!htmlModules) return false
+      if (!htmlModules)
+        return false
       if (htmlModules[prop] === 'article') { // 仅文章页显示
         return this.isArticle()
-      } else if (htmlModules[prop] === 'custom') { // 仅自定义页显示
+      }
+      else if (htmlModules[prop] === 'custom') { // 仅自定义页显示
         return !(this.isArticle())
-      } else { // 全部显示
+      }
+      else { // 全部显示
         return true
       }
     },
     isArticle() {
       return this.$frontmatter.article !== false
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div>
+    <main class="page">
+      <div :class="`theme-vdoing-wrapper ${bgStyle}`">
+        <ArticleInfo v-if="isArticle()" />
+        <div v-else class="placeholder" />
+        <component
+          :is="pageComponent"
+          v-if="pageComponent"
+          class="theme-vdoing-content"
+        />
+
+        <div class="content-wrapper">
+          <RightMenu v-if="showRightMenu" />
+
+          <h1 v-if="showTitle">
+            <img
+              v-if="$themeConfig.titleBadge === false ? false : true"
+              :src="currentBadge"
+            >{{ $page.title
+            }}<span v-if="$frontmatter.titleTag" class="title-tag">{{
+              $frontmatter.titleTag
+            }}</span>
+          </h1>
+
+          <slot v-if="isShowSlotT" name="top" />
+
+          <Content class="theme-vdoing-content" />
+        </div>
+        <slot v-if="isShowSlotB" name="bottom" />
+        <PageEdit />
+
+        <PageNav v-bind="{ sidebarItems }" />
+      </div>
+
+      <UpdateArticle
+        v-if="isShowUpdateBar"
+        :length="3"
+        :more-article="updateBarConfig && updateBarConfig.moreArticle"
+      />
+    </main>
+  </div>
+</template>
 
 <style lang="stylus">
 @require '../styles/wrapper.styl'

@@ -21,18 +21,19 @@ export function isExternal(path) {
 }
 
 export function isMailto(path) {
-  return /^mailto:/.test(path)
+  return path.startsWith('mailto:')
 }
 
 export function isTel(path) {
-  return /^tel:/.test(path)
+  return path.startsWith('tel:')
 }
 
 export function ensureExt(path) {
   if (isExternal(path)) {
     return path
   }
-  if (!path) return '404'
+  if (!path)
+    return '404'
   const hashMatch = path.match(hashRE)
   const hash = hashMatch ? hashMatch[0] : ''
   const normalized = normalize(path)
@@ -40,7 +41,7 @@ export function ensureExt(path) {
   if (endingSlashRE.test(normalized)) {
     return path
   }
-  return normalized + '.html' + hash
+  return `${normalized}.html${hash}`
 }
 
 export function isActive(route, path) {
@@ -58,7 +59,7 @@ export function resolvePage(pages, rawPath, base) {
   if (isExternal(rawPath)) {
     return {
       type: 'external',
-      path: rawPath
+      path: rawPath,
     }
   }
   if (base) {
@@ -69,7 +70,7 @@ export function resolvePage(pages, rawPath, base) {
     if (normalize(pages[i].regularPath) === path) {
       return Object.assign({}, pages[i], {
         type: 'page',
-        path: ensureExt(pages[i].path)
+        path: ensureExt(pages[i].path),
       })
     }
   }
@@ -102,7 +103,8 @@ function resolvePath(relative, base, append) {
     const segment = segments[i]
     if (segment === '..') {
       stack.pop()
-    } else if (segment !== '.') {
+    }
+    else if (segment !== '.') {
       stack.push(segment)
     }
   }
@@ -137,7 +139,8 @@ export function resolveSidebarItems(page, regularPath, site, localePath) {
   const sidebarConfig = localeConfig.sidebar || themeConfig.sidebar
   if (!sidebarConfig) {
     return []
-  } else {
+  }
+  else {
     const { base, config } = resolveMatchingConfig(regularPath, sidebarConfig)
     if (config === 'auto') {
       return resolveHeaders(page)
@@ -163,9 +166,9 @@ function resolveHeaders(page) {
       type: 'auto',
       title: h.title,
       basePath: page.path,
-      path: page.path + '#' + h.slug,
-      children: h.children || []
-    }))
+      path: `${page.path}#${h.slug}`,
+      children: h.children || [],
+    })),
   }]
 }
 
@@ -173,10 +176,11 @@ export function groupHeaders(headers) {
   // group h3s under h2
   headers = headers.map(h => Object.assign({}, h))
   let lastH2
-  headers.forEach(h => {
+  headers.forEach((h) => {
     if (h.level === 2) {
       lastH2 = h
-    } else if (lastH2) {
+    }
+    else if (lastH2) {
       (lastH2.children || (lastH2.children = [])).push(h)
     }
   })
@@ -185,7 +189,7 @@ export function groupHeaders(headers) {
 
 export function resolveNavLinkItem(linkItem) {
   return Object.assign(linkItem, {
-    type: linkItem.items && linkItem.items.length ? 'links' : 'link'
+    type: linkItem.items && linkItem.items.length ? 'links' : 'link',
   })
 }
 
@@ -198,14 +202,14 @@ export function resolveMatchingConfig(regularPath, config) {
   if (Array.isArray(config)) {
     return {
       base: '/',
-      config: config
+      config,
     }
   }
   for (const base in config) {
     if (ensureEndingSlash(regularPath).indexOf(encodeURI(base)) === 0) {
       return {
         base,
-        config: config[base]
+        config: config[base],
       }
     }
   }
@@ -215,26 +219,28 @@ export function resolveMatchingConfig(regularPath, config) {
 function ensureEndingSlash(path) {
   return /(\.html|\/)$/.test(path)
     ? path
-    : path + '/'
+    : `${path}/`
 }
 
 function resolveItem(item, pages, base, groupDepth = 1) {
   if (typeof item === 'string') {
     return resolvePage(pages, item, base)
-  } else if (Array.isArray(item)) {
+  }
+  else if (Array.isArray(item)) {
     return Object.assign(resolvePage(pages, item[0], base), {
-      title: item[1]
+      title: item[1],
     })
-  } else {
+  }
+  else {
     if (groupDepth > 3) {
       console.error(
-        '[vuepress] detected a too deep nested sidebar group.'
+        '[vuepress] detected a too deep nested sidebar group.',
       )
     }
     const children = item.children || []
     if (children.length === 0 && item.path) {
       return Object.assign(resolvePage(pages, item.path, base), {
-        title: item.title
+        title: item.title,
       })
     }
     return {
@@ -244,11 +250,10 @@ function resolveItem(item, pages, base, groupDepth = 1) {
       sidebarDepth: item.sidebarDepth,
       initialOpenGroupIndex: item.initialOpenGroupIndex,
       children: children.map(child => resolveItem(child, pages, base, groupDepth + 1)),
-      collapsable: item.collapsable !== false
+      collapsable: item.collapsable !== false,
     }
   }
 }
-
 
 // 类型判断
 export function type(o) {
@@ -271,9 +276,9 @@ export function zero(d) {
 
 // 获取时间的时间戳
 export function getTimeNum(post) {
-  let dateStr = post.frontmatter.date || post.lastUpdated || new Date()
+  const dateStr = post.frontmatter.date || post.lastUpdated || new Date()
   let date = new Date(dateStr)
-  if (date == "Invalid Date" && dateStr) { // 修复new Date()在Safari下出现Invalid Date的问题
+  if (date == 'Invalid Date' && dateStr) { // 修复new Date()在Safari下出现Invalid Date的问题
     date = new Date(dateStr.replace(/-/g, '/'))
   }
   return date.getTime()
@@ -286,7 +291,7 @@ export function compareDate(a, b) {
 
 // 将特殊符号编码（应用于url）
 export function encodeUrl(str) {
-  str = str + ''
-  str = str.replace(/ |((?=[\x21-\x7e]+)[^A-Za-z0-9])/g, '-')
+  str = `${str}`
+  str = str.replace(/ |((?=[\x21-\x7E]+)[^A-Z0-9])/gi, '-')
   return str
 }

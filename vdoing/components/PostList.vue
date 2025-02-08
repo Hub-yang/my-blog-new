@@ -1,119 +1,28 @@
-<template>
-  <div class="post-list" ref="postList">
-    <transition-group tag="div" name="post">
-      <div
-        class="post card-box"
-        :class="item.frontmatter.sticky && 'iconfont icon-zhiding'"
-        v-for="item in sortPosts"
-        :key="item.key"
-      >
-        <div class="title-wrapper">
-          <h2>
-            <router-link :to="item.path">
-              {{ item.title }}
-              <span class="title-tag" v-if="item.frontmatter.titleTag">{{
-                item.frontmatter.titleTag
-              }}</span>
-            </router-link>
-          </h2>
-          <div class="article-info">
-            <a
-              title="作者"
-              class="iconfont icon-touxiang"
-              target="_blank"
-              v-if="item.author && item.author.href"
-              :href="item.author.href"
-              >{{ item.author.name ? item.author.name : item.author }}</a
-            >
-            <span
-              title="作者"
-              class="iconfont icon-touxiang"
-              v-else-if="item.author"
-              >{{ item.author.name ? item.author.name : item.author }}</span
-            >
-
-            <span
-              title="创建时间"
-              class="iconfont icon-riqi"
-              v-if="item.frontmatter.date"
-              >{{ item.frontmatter.date.split(' ')[0] }}</span
-            >
-            <span
-              title="分类"
-              class="iconfont icon-wenjian"
-              v-if="
-                $themeConfig.category !== false && item.frontmatter.categories
-              "
-            >
-              <router-link
-                :to="`/categories/?category=${encodeURIComponent(c)}`"
-                v-for="(c, index) in item.frontmatter.categories"
-                :key="index"
-                >{{ c }}</router-link
-              >
-            </span>
-            <span
-              title="标签"
-              class="iconfont icon-biaoqian tags"
-              v-if="
-                $themeConfig.tag !== false &&
-                item.frontmatter.tags &&
-                item.frontmatter.tags[0]
-              "
-            >
-              <router-link
-                :to="`/tags/?tag=${encodeURIComponent(t)}`"
-                v-for="(t, index) in item.frontmatter.tags"
-                :key="index"
-                >{{ t }}</router-link
-              >
-            </span>
-          </div>
-        </div>
-        <div class="excerpt-wrapper" v-if="item.excerpt">
-          <div class="excerpt" v-html="item.excerpt"></div>
-          <router-link
-            :to="item.path"
-            class="readmore iconfont icon-jiantou-you"
-            >阅读全文</router-link
-          >
-        </div>
-      </div>
-    </transition-group>
-  </div>
-</template>
-
 <script>
 export default {
   props: {
     category: {
       type: String,
-      default: ''
+      default: '',
     },
     tag: {
       type: String,
-      default: ''
+      default: '',
     },
     currentPage: {
       type: Number,
-      default: 1
+      default: 1,
     },
     perPage: {
       type: Number,
-      default: 10
-    }
+      default: 10,
+    },
   },
   data() {
     return {
       sortPosts: [],
-      postListOffsetTop: 0
+      postListOffsetTop: 0,
     }
-  },
-  created() {
-    this.setPosts()
-  },
-  mounted() {
-    // this.postListOffsetTop = this.getElementToPageTop(this.$refs.postList) - 240
   },
   watch: {
     currentPage() {
@@ -121,8 +30,8 @@ export default {
         this.$router.push({
           query: {
             ...this.$route.query,
-            p: this.currentPage
-          }
+            p: this.currentPage,
+          },
         })
       }
       // setTimeout(() => {
@@ -135,7 +44,13 @@ export default {
     },
     tag() {
       this.setPosts()
-    }
+    },
+  },
+  created() {
+    this.setPosts()
+  },
+  mounted() {
+    // this.postListOffsetTop = this.getElementToPageTop(this.$refs.postList) - 240
   },
   methods: {
     setPosts() {
@@ -145,9 +60,11 @@ export default {
       let posts = []
       if (this.category) {
         posts = this.$groupPosts.categories[this.category]
-      } else if (this.tag) {
+      }
+      else if (this.tag) {
         posts = this.$groupPosts.tags[this.tag]
-      } else {
+      }
+      else {
         posts = this.$sortPosts
       }
 
@@ -159,9 +76,90 @@ export default {
     //   }
     //   return el.offsetTop
     // }
-  }
+  },
 }
 </script>
+
+<template>
+  <div ref="postList" class="post-list">
+    <transition-group tag="div" name="post">
+      <div
+        v-for="item in sortPosts"
+        :key="item.key"
+        class="post card-box"
+        :class="item.frontmatter.sticky && 'iconfont icon-zhiding'"
+      >
+        <div class="title-wrapper">
+          <h2>
+            <router-link :to="item.path">
+              {{ item.title }}
+              <span v-if="item.frontmatter.titleTag" class="title-tag">{{
+                item.frontmatter.titleTag
+              }}</span>
+            </router-link>
+          </h2>
+          <div class="article-info">
+            <a
+              v-if="item.author && item.author.href"
+              title="作者"
+              class="iconfont icon-touxiang"
+              target="_blank"
+              :href="item.author.href"
+            >{{ item.author.name ? item.author.name : item.author }}</a>
+            <span
+              v-else-if="item.author"
+              title="作者"
+              class="iconfont icon-touxiang"
+            >{{ item.author.name ? item.author.name : item.author }}</span>
+
+            <span
+              v-if="item.frontmatter.date"
+              title="创建时间"
+              class="iconfont icon-riqi"
+            >{{ item.frontmatter.date.split(' ')[0] }}</span>
+            <span
+              v-if="
+                $themeConfig.category !== false && item.frontmatter.categories
+              "
+              title="分类"
+              class="iconfont icon-wenjian"
+            >
+              <router-link
+                v-for="(c, index) in item.frontmatter.categories"
+                :key="index"
+                :to="`/categories/?category=${encodeURIComponent(c)}`"
+              >{{ c }}</router-link>
+            </span>
+            <span
+              v-if="
+                $themeConfig.tag !== false
+                  && item.frontmatter.tags
+                  && item.frontmatter.tags[0]
+              "
+              title="标签"
+              class="iconfont icon-biaoqian tags"
+            >
+              <router-link
+                v-for="(t, index) in item.frontmatter.tags"
+                :key="index"
+                :to="`/tags/?tag=${encodeURIComponent(t)}`"
+              >{{ t }}</router-link>
+            </span>
+          </div>
+        </div>
+        <div v-if="item.excerpt" class="excerpt-wrapper">
+          <div class="excerpt" v-html="item.excerpt" />
+          <router-link
+            :to="item.path"
+            class="readmore iconfont icon-jiantou-you"
+          >
+            阅读全文
+          </router-link>
+        </div>
+      </div>
+    </transition-group>
+  </div>
+</template>
 
 <style lang='stylus'>
 .post-list

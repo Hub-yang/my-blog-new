@@ -1,28 +1,3 @@
-<template>
-  <div class="page-edit">
-    <div class="edit-link" v-if="editLink">
-      <a :href="editLink" target="_blank" rel="noopener noreferrer">{{
-        editLinkText
-      }}</a>
-      <OutboundLink />
-    </div>
-
-    <div class="tags" v-if="$themeConfig.tag !== false && tags && tags[0]">
-      <router-link
-        :to="`/tags/?tag=${encodeURIComponent(item)}`"
-        v-for="(item, index) in tags"
-        :key="index"
-        title="标签"
-        >#{{ item }}</router-link
-      >
-    </div>
-
-    <div class="last-updated" v-if="lastUpdated">
-      <span class="prefix">{{ lastUpdatedText }}:</span>
-      <span class="time">{{ lastUpdated }}</span>
-    </div>
-  </div>
-</template>
 <script>
 import isNil from 'lodash/isNil'
 import { endingSlashRE, outboundRE } from '../util'
@@ -30,15 +5,15 @@ import { endingSlashRE, outboundRE } from '../util'
 export default {
   name: 'PageEdit',
   computed: {
-    tags () {
+    tags() {
       return this.$frontmatter.tags
     },
 
-    lastUpdated () {
+    lastUpdated() {
       return this.$page.lastUpdated
     },
 
-    lastUpdatedText () {
+    lastUpdatedText() {
       if (typeof this.$themeLocaleConfig.lastUpdated === 'string') {
         return this.$themeLocaleConfig.lastUpdated
       }
@@ -48,7 +23,7 @@ export default {
       return 'Last Updated'
     },
 
-    editLink () {
+    editLink() {
       const showEditLink = isNil(this.$page.frontmatter.editLink)
         ? this.$site.themeConfig.editLinks
         : this.$page.frontmatter.editLink
@@ -57,7 +32,7 @@ export default {
         repo,
         docsDir = '',
         docsBranch = 'master',
-        docsRepo = repo
+        docsRepo = repo,
       } = this.$site.themeConfig
 
       if (showEditLink && docsRepo && this.$page.relativePath) {
@@ -66,33 +41,33 @@ export default {
           docsRepo,
           docsDir,
           docsBranch,
-          this.$page.relativePath
+          this.$page.relativePath,
         )
       }
       return null
     },
 
-    editLinkText () {
+    editLinkText() {
       return (
         this.$themeLocaleConfig.editLinkText
         || this.$site.themeConfig.editLinkText
         || `Edit this page`
       )
-    }
+    },
   },
 
   methods: {
-    createEditLink (repo, docsRepo, docsDir, docsBranch, path) {
+    createEditLink(repo, docsRepo, docsDir, docsBranch, path) {
       const bitbucket = /bitbucket.org/
       if (bitbucket.test(docsRepo)) {
         const base = docsRepo
         return (
-          base.replace(endingSlashRE, '')
-          + `/src`
-          + `/${docsBranch}/`
-          + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
-          + path
-          + `?mode=edit&spa=0&at=${docsBranch}&fileviewer=file-view-default`
+          `${base.replace(endingSlashRE, '')
+          }/src`
+          + `/${docsBranch}/${
+            docsDir ? `${docsDir.replace(endingSlashRE, '')}/` : ''
+          }${path
+          }?mode=edit&spa=0&at=${docsBranch}&fileviewer=file-view-default`
         )
       }
 
@@ -100,24 +75,24 @@ export default {
       if (gitlab.test(docsRepo)) {
         const base = docsRepo
         return (
-          base.replace(endingSlashRE, '')
-          + `/-/edit`
-          + `/${docsBranch}/`
-          + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
-          + path
+          `${base.replace(endingSlashRE, '')
+          }/-/edit`
+          + `/${docsBranch}/${
+            docsDir ? `${docsDir.replace(endingSlashRE, '')}/` : ''
+          }${path}`
         )
       }
-      
+
       // https://gitee.com/-/ide/project/xxx/xxx/edit/master/-/xxxx
       const gitee = /gitee.com/
       if (gitee.test(docsRepo)) {
         const base = docsRepo
         return (
-            base.replace(gitee, 'gitee.com/-/ide/project')
-            + `/edit`
-            + `/${docsBranch}/-/`
-            + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
-            + path
+          `${base.replace(gitee, 'gitee.com/-/ide/project')
+          }/edit`
+          + `/${docsBranch}/-/${
+            docsDir ? `${docsDir.replace(endingSlashRE, '')}/` : ''
+          }${path}`
         )
       }
 
@@ -125,16 +100,44 @@ export default {
         ? docsRepo
         : `https://github.com/${docsRepo}`
       return (
-        base.replace(endingSlashRE, '')
-        + `/edit`
-        + `/${docsBranch}/`
-        + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
-        + path
+        `${base.replace(endingSlashRE, '')
+        }/edit`
+        + `/${docsBranch}/${
+          docsDir ? `${docsDir.replace(endingSlashRE, '')}/` : ''
+        }${path}`
       )
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="page-edit">
+    <div v-if="editLink" class="edit-link">
+      <a :href="editLink" target="_blank" rel="noopener noreferrer">{{
+        editLinkText
+      }}</a>
+      <OutboundLink />
+    </div>
+
+    <div v-if="$themeConfig.tag !== false && tags && tags[0]" class="tags">
+      <router-link
+        v-for="(item, index) in tags"
+        :key="index"
+        :to="`/tags/?tag=${encodeURIComponent(item)}`"
+        title="标签"
+      >
+        #{{ item }}
+      </router-link>
+    </div>
+
+    <div v-if="lastUpdated" class="last-updated">
+      <span class="prefix">{{ lastUpdatedText }}:</span>
+      <span class="time">{{ lastUpdated }}</span>
+    </div>
+  </div>
+</template>
+
 <style lang="stylus">
 @require '../styles/wrapper.styl'
 

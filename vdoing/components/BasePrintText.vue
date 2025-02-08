@@ -1,48 +1,14 @@
-<template>
-  <div class="container">
-    <span>{{ printText }}|</span>
-  </div>
-</template>
-
 <script>
 export default {
-  name: "Vue2PracticeApp",
+  name: 'Vue2PracticeApp',
   props: { text: String },
   data() {
     return {
       count: 1,
       timer: null,
       index: 0,
-      printText: "",
-    };
-  },
-
-  methods: {
-    setForward(text) {
-      let timer = null;
-      timer = setInterval(() => {
-        if (this.count == text.length + 1) {
-          clearInterval(timer);
-          timer = null;
-          this.setBack(text);
-        }
-
-        this.printText = text.substr(0, this.count);
-        this.count++;
-      }, 200);
-    },
-
-    setBack(text) {
-      this.timer = setInterval(() => {
-        if (this.count == 0) {
-          clearInterval(this.timer);
-          this.timer = null;
-        }
-
-        this.printText = text.substr(0, this.count);
-        this.count--;
-      }, 100);
-    },
+      printText: '',
+    }
   },
 
   watch: {
@@ -50,19 +16,53 @@ export default {
       handler(newVal) {
         if (!newVal) {
           // 重新请求
-          this.$emit("refetch", true);
+          this.$emit('refetch', true)
         }
       },
     },
     text: {
       handler() {
-        let printText = this.text;
-        this.setForward(printText);
+        const printText = this.text
+        this.setForward(printText)
       },
     },
   },
-};
+
+  methods: {
+    setForward(text) {
+      let timer = null
+      timer = setInterval(() => {
+        if (this.count == text.length + 1) {
+          clearInterval(timer)
+          timer = null
+          this.setBack(text)
+        }
+
+        this.printText = text.substr(0, this.count)
+        this.count++
+      }, 200)
+    },
+
+    setBack(text) {
+      this.timer = setInterval(() => {
+        if (this.count == 0) {
+          clearInterval(this.timer)
+          this.timer = null
+        }
+
+        this.printText = text.substr(0, this.count)
+        this.count--
+      }, 100)
+    },
+  },
+}
 </script>
+
+<template>
+  <div class="container">
+    <span>{{ printText }}|</span>
+  </div>
+</template>
 
 <style scoped>
 .container {

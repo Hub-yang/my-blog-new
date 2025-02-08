@@ -1,3 +1,69 @@
+<script>
+export default {
+  props: {
+    total: {
+      // 总长度
+      type: Number,
+      default: 10,
+    },
+    perPage: {
+      // 每页长
+      type: Number,
+      default: 10,
+    },
+    currentPage: {
+      // 当前页
+      type: Number,
+      default: 1,
+    },
+  },
+  computed: {
+    pages() {
+      // 总页数
+      return Math.ceil(this.total / this.perPage)
+    },
+  },
+  methods: {
+    threeNum() {
+      // 三号位页码计算
+      let num = 3
+      const currentPage = this.currentPage
+      const pages = this.pages
+      if (currentPage < 3) {
+        num = 3
+      }
+      else if (currentPage > pages - 3) {
+        num = pages - 2
+      }
+      else {
+        num = currentPage
+      }
+      return num
+    },
+    goPrex() {
+      let currentPage = this.currentPage
+      if (currentPage > 1) {
+        this.handleEmit(--currentPage)
+      }
+    },
+    goNext() {
+      let currentPage = this.currentPage
+      if (currentPage < this.pages) {
+        this.handleEmit(++currentPage)
+      }
+    },
+    goIndex(i) {
+      if (i !== this.currentPage) {
+        this.handleEmit(i)
+      }
+    },
+    handleEmit(i) {
+      this.$emit('getCurrentPage', i)
+    },
+  },
+}
+</script>
+
 <template>
   <div class="pagination">
     <span
@@ -9,72 +75,66 @@
     </span>
 
     <!-- 分页在5页及以下时 -->
-    <div class="pagination-list" v-if="pages <= 5">
+    <div v-if="pages <= 5" class="pagination-list">
       <span
-        class="card-box"
         v-for="item in pages"
         :key="item"
+        class="card-box"
         :class="{ active: currentPage === item }"
         @click="goIndex(item)"
-        >{{ item }}</span
-      >
+      >{{ item }}</span>
     </div>
     <!-- 分页在5页以上 -->
-    <div class="pagination-list" v-else>
+    <div v-else class="pagination-list">
       <!-- 一号位 -->
       <span
         class="card-box"
         :class="{ active: currentPage === 1 }"
         @click="goIndex(1)"
-        >1</span
-      >
+      >1</span>
 
       <!-- 二号位 -->
       <span
-        class="ellipsis ell-two"
         v-show="currentPage > 3"
-        @click="goIndex(currentPage - 2)"
+        class="ellipsis ell-two"
         title="上两页"
+        @click="goIndex(currentPage - 2)"
       />
-      <!--这里没有使用v-if的原因是因为部署版本在当前页大于3时刷新页面出现了一些bug-->
+      <!-- 这里没有使用v-if的原因是因为部署版本在当前页大于3时刷新页面出现了一些bug -->
       <span
-        class="card-box"
         v-show="currentPage <= 3"
+        class="card-box"
         :class="{ active: currentPage === 2 }"
         @click="goIndex(2)"
-        >2</span
-      >
+      >2</span>
 
       <!-- 三号位 -->
       <span
         class="card-box"
         :class="{ active: currentPage >= 3 && currentPage <= pages - 2 }"
         @click="goIndex(threeNum())"
-        >{{ threeNum() }}</span
-      >
+      >{{ threeNum() }}</span>
 
       <!-- 四号位 -->
       <span
-        class="ellipsis ell-four"
         v-show="currentPage < pages - 2"
-        @click="goIndex(currentPage + 2)"
+        class="ellipsis ell-four"
         title="下两页"
+        @click="goIndex(currentPage + 2)"
       />
       <span
-        class="card-box"
         v-show="currentPage >= pages - 2"
+        class="card-box"
         :class="{ active: currentPage === pages - 1 }"
         @click="goIndex(pages - 1)"
-        >{{ pages - 1 }}</span
-      >
+      >{{ pages - 1 }}</span>
 
       <!-- 五号位 -->
       <span
         class="card-box"
         :class="{ active: currentPage === pages }"
         @click="goIndex(pages)"
-        >{{ pages }}</span
-      >
+      >{{ pages }}</span>
     </div>
 
     <span
@@ -86,70 +146,6 @@
     </span>
   </div>
 </template>
-
-<script>
-  export default {
-    props: {
-      total: {
-        // 总长度
-        type: Number,
-        default: 10,
-      },
-      perPage: {
-        // 每页长
-        type: Number,
-        default: 10,
-      },
-      currentPage: {
-        // 当前页
-        type: Number,
-        default: 1,
-      },
-    },
-    computed: {
-      pages() {
-        // 总页数
-        return Math.ceil(this.total / this.perPage);
-      },
-    },
-    methods: {
-      threeNum() {
-        // 三号位页码计算
-        let num = 3;
-        const currentPage = this.currentPage;
-        const pages = this.pages;
-        if (currentPage < 3) {
-          num = 3;
-        } else if (currentPage > pages - 3) {
-          num = pages - 2;
-        } else {
-          num = currentPage;
-        }
-        return num;
-      },
-      goPrex() {
-        let currentPage = this.currentPage;
-        if (currentPage > 1) {
-          this.handleEmit(--currentPage);
-        }
-      },
-      goNext() {
-        let currentPage = this.currentPage;
-        if (currentPage < this.pages) {
-          this.handleEmit(++currentPage);
-        }
-      },
-      goIndex(i) {
-        if (i !== this.currentPage) {
-          this.handleEmit(i);
-        }
-      },
-      handleEmit(i) {
-        this.$emit("getCurrentPage", i);
-      },
-    },
-  };
-</script>
 
 <style lang="stylus">
   .pagination

@@ -1,25 +1,20 @@
-<template>
-  <div
-    class="body-bg"
-    :style="`background: url(${bgImg}) center center / cover no-repeat;opacity:${opacity};filter:blur(.5px)`"
-  ></div>
-</template>
-
 <script>
 import { type } from '../util'
+
 export default {
   data() {
     return {
       bgImg: '',
-      opacity: 0.5
+      opacity: 0.5,
     }
   },
   mounted() {
-    let { bodyBgImg, bodyBgImgOpacity, bodyBgImgInterval = 15 } = this.$themeConfig
+    const { bodyBgImg, bodyBgImgOpacity, bodyBgImgInterval = 15 } = this.$themeConfig
 
     if (type(bodyBgImg) === 'string') {
       this.bgImg = bodyBgImg
-    } else if (type(bodyBgImg) === 'array') {
+    }
+    else if (type(bodyBgImg) === 'array') {
       let count = 0
       let timer = null
 
@@ -36,16 +31,22 @@ export default {
           const img = new Image()
           img.src = bodyBgImg[count + 1]
         }
-      }, bodyBgImgInterval * 1000);
+      }, bodyBgImgInterval * 1000)
     }
 
     if (bodyBgImgOpacity !== undefined) {
       this.opacity = bodyBgImgOpacity
     }
-
-  }
+  },
 }
 </script>
+
+<template>
+  <div
+    class="body-bg"
+    :style="`background: url(${bgImg}) center center / cover no-repeat;opacity:${opacity};filter:blur(.5px)`"
+  />
+</template>
 
 <style lang='stylus'>
 .body-bg

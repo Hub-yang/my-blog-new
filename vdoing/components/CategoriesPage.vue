@@ -1,58 +1,38 @@
-<template>
-  <div class="custom-page categories-page">
-    <MainLayout>
-      <template #mainLeft>
-        <CategoriesBar
-          v-if="$categoriesAndTags.categories.length"
-          :categoriesData="$categoriesAndTags.categories"
-          :category="category"
-        />
-        <PostList
-          :currentPage="currentPage"
-          :perPage="perPage"
-          :category="category"
-        />
-        <Pagination
-          :total="total"
-          :perPage="perPage"
-          :currentPage="currentPage"
-          @getCurrentPage="handlePagination"
-          v-show="Math.ceil(total / perPage) > 1"
-        />
-      </template>
-      <template #mainRight>
-        <CategoriesBar
-          v-if="$categoriesAndTags.categories.length"
-          :categoriesData="$categoriesAndTags.categories"
-          :category="category"
-        />
-      </template>
-    </MainLayout>
-  </div>
-</template>
-
 <script>
-import MainLayout from '@theme/components/MainLayout'
-import PostList from '@theme/components/PostList'
-import Pagination from '@theme/components/Pagination'
 import CategoriesBar from '@theme/components/CategoriesBar'
+import MainLayout from '@theme/components/MainLayout'
+import Pagination from '@theme/components/Pagination'
+import PostList from '@theme/components/PostList'
 
 export default {
+  components: { MainLayout, PostList, Pagination, CategoriesBar },
   data() {
     return {
       category: '',
       total: 0, // 总长
       perPage: 10, // 每页长
-      currentPage: 1// 当前页
+      currentPage: 1, // 当前页
     }
   },
-  components: { MainLayout, PostList, Pagination, CategoriesBar },
+  watch: {
+    '$route.query.category': function (category) {
+      this.category = category ? decodeURIComponent(category) : ''
+      if (this.category) {
+        this.total = this.$groupPosts.categories[this.category].length
+      }
+      else {
+        this.total = this.$sortPosts.length
+      }
+      this.currentPage = 1
+    },
+  },
   mounted() {
     const queryCategory = this.$route.query.category
     if (queryCategory) {
       this.category = queryCategory
       this.total = this.$groupPosts.categories[queryCategory].length
-    } else {
+    }
+    else {
       this.total = this.$sortPosts.length
     }
     if (this.$route.query.p) {
@@ -72,22 +52,43 @@ export default {
   methods: {
     handlePagination(i) { // 分页
       this.currentPage = i
-    }
+    },
   },
-  watch: {
-    '$route.query.category'(category) {
-      this.category = category ? decodeURIComponent(category) : ''
-      if (this.category) {
-        this.total = this.$groupPosts.categories[this.category].length
-      } else {
-        this.total = this.$sortPosts.length
-      }
-      this.currentPage = 1
-
-    }
-  }
 }
 </script>
+
+<template>
+  <div class="custom-page categories-page">
+    <MainLayout>
+      <template #mainLeft>
+        <CategoriesBar
+          v-if="$categoriesAndTags.categories.length"
+          :categories-data="$categoriesAndTags.categories"
+          :category="category"
+        />
+        <PostList
+          :current-page="currentPage"
+          :per-page="perPage"
+          :category="category"
+        />
+        <Pagination
+          v-show="Math.ceil(total / perPage) > 1"
+          :total="total"
+          :per-page="perPage"
+          :current-page="currentPage"
+          @get-current-page="handlePagination"
+        />
+      </template>
+      <template #mainRight>
+        <CategoriesBar
+          v-if="$categoriesAndTags.categories.length"
+          :categories-data="$categoriesAndTags.categories"
+          :category="category"
+        />
+      </template>
+    </MainLayout>
+  </div>
+</template>
 
 <style lang='stylus'>
 .categories-page

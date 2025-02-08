@@ -1,41 +1,20 @@
-<template>
-  <div class="right-menu-wrapper">
-    <div class="right-menu-margin">
-      <div class="right-menu-title">目录</div>
-      <div class="right-menu-content">
-        <div
-          :class="[
-            'right-menu-item',
-            'level' + item.level,
-            { active: item.slug === hashText }
-          ]"
-          v-for="(item, i) in headers"
-          :key="i"
-        >
-          <a :href="'#' + item.slug">{{ item.title }}</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 export default {
   data() {
     return {
       headers: [],
-      hashText: ''
+      hashText: '',
     }
-  },
-  mounted() {
-    this.getHeadersData()
-    this.getHashText()
   },
   watch: {
     $route() {
       this.headers = this.$page.headers
       this.getHashText()
-    }
+    },
+  },
+  mounted() {
+    this.getHeadersData()
+    this.getHashText()
   },
   methods: {
     getHeadersData() {
@@ -43,10 +22,32 @@ export default {
     },
     getHashText() {
       this.hashText = decodeURIComponent(window.location.hash.slice(1))
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="right-menu-wrapper">
+    <div class="right-menu-margin">
+      <div class="right-menu-title">
+        目录
+      </div>
+      <div class="right-menu-content">
+        <div
+          v-for="(item, i) in headers" :key="i"
+          class="right-menu-item"
+          :class="[
+            `level${item.level}`,
+            { active: item.slug === hashText },
+          ]"
+        >
+          <a :href="`#${item.slug}`">{{ item.title }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style lang='stylus'>
 .theme-style-line

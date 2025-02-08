@@ -1,9 +1,10 @@
-const path = require('path')
-const setFrontmatter = require('./node_utils/setFrontmatter')
-const getSidebarData = require('./node_utils/getSidebarData')
-const { createPage, deletePage } = require('./node_utils/handlePage')
+const path = require('node:path')
 const chalk = require('chalk') // 命令行打印美化
 const yaml = require('js-yaml') // yaml转js
+const getSidebarData = require('./node_utils/getSidebarData')
+const { createPage, deletePage } = require('./node_utils/handlePage')
+const setFrontmatter = require('./node_utils/setFrontmatter')
+
 const log = console.log
 
 // md容器名
@@ -12,7 +13,6 @@ const CARD_IMG_LIST = 'cardImgList'
 
 // siteConfig base 配置
 let base = ''
-
 
 // Theme API.
 module.exports = (options, ctx) => {
@@ -27,12 +27,13 @@ module.exports = (options, ctx) => {
   // 自动生成结构化侧边栏
   const sidebar = themeConfig.sidebar
   if (sidebar === 'structuring' || sidebar && sidebar.mode === 'structuring') {
-    const collapsable = themeConfig.sidebar.collapsable === false ? false : true
+    const collapsable = themeConfig.sidebar.collapsable !== false
     const sidebarData = getSidebarData(sourceDir, collapsable)
     if (sidebarData) {
       themeConfig.sidebar = sidebarData
       log(chalk.blue('tip ') + chalk.green('add sidebar data. 成功生成侧边栏数据。'))
-    } else {
+    }
+    else {
       themeConfig.sidebar = 'auto'
       log(chalk.yellow('warning: fail to add sidebar data, switch to "auto". 未能添加侧边栏数据，将切换为“auto”。'))
     }
@@ -41,21 +42,24 @@ module.exports = (options, ctx) => {
   // 分类页
   if (themeConfig.category !== false) {
     createPage(sourceDir, 'categoriesPage')
-  } else {
+  }
+  else {
     deletePage(sourceDir, 'categoriesPage')
   }
 
   // 标签页
   if (themeConfig.tag !== false) {
     createPage(sourceDir, 'tagsPage')
-  } else {
+  }
+  else {
     deletePage(sourceDir, 'tagsPage')
   }
 
   // 归档页
   if (themeConfig.archive !== false) {
     createPage(sourceDir, 'archivesPage')
-  } else {
+  }
+  else {
     deletePage(sourceDir, 'archivesPage')
   }
 
@@ -74,7 +78,7 @@ module.exports = (options, ctx) => {
       return {
         '@AlgoliaSearchBox': isAlgoliaSearch
           ? path.resolve(__dirname, 'components/AlgoliaSearchBox.vue')
-          : path.resolve(__dirname, 'noopModule.js')
+          : path.resolve(__dirname, 'noopModule.js'),
       }
     },
 
@@ -88,38 +92,38 @@ module.exports = (options, ctx) => {
         type: 'note',
         defaultTitle: {
           '/': '笔记',
-          '/en/': 'NOTE'
-        }
+          '/en/': 'NOTE',
+        },
       }],
       ['container', {
         type: 'tip',
         defaultTitle: {
           '/': '提示',
-          '/en/': 'TIP'
-        }
+          '/en/': 'TIP',
+        },
       }],
       ['container', {
         type: 'warning',
         defaultTitle: {
           '/': '注意',
-          '/en/': 'WARNING'
-        }
+          '/en/': 'WARNING',
+        },
       }],
       ['container', {
         type: 'danger',
         defaultTitle: {
           '/': '警告',
-          '/en/': 'WARNING'
-        }
+          '/en/': 'WARNING',
+        },
       }],
       ['container', {
         type: 'right',
-        defaultTitle: ''
+        defaultTitle: '',
       }],
       ['container', {
         type: 'theorem',
         before: info => `<div class="custom-block theorem"><p class="title">${info}</p>`,
-        after: '</div>'
+        after: '</div>',
       }],
       ['container', {
         type: 'details',
@@ -127,15 +131,15 @@ module.exports = (options, ctx) => {
         after: () => '</details>\n',
         defaultTitle: {
           '/': '点击查看',
-          '/en/': 'DETAILS'
-        }
+          '/en/': 'DETAILS',
+        },
       }],
 
       // 内容居中容器
       ['container', {
         type: 'center',
         before: info => `<div class="center-container">`,
-        after: () => '</div>'
+        after: () => '</div>',
       }],
 
       // 卡片列表
@@ -151,7 +155,7 @@ module.exports = (options, ctx) => {
             // }
             // 注意：修改这里面的代码后需要在md文件保存一下才会重新执行渲染
             return renderCardList(tokens, idx, CARD_LIST)
-          }
+          },
         },
       ],
 
@@ -162,33 +166,33 @@ module.exports = (options, ctx) => {
           type: CARD_IMG_LIST,
           render: (tokens, idx) => {
             return renderCardList(tokens, idx, CARD_IMG_LIST)
-          }
+          },
         },
       ],
 
-
-    ]
+    ],
   }
 }
 
-
 // 渲染md容器的卡片列表
 function renderCardList(tokens, idx, type) {
-  const END_TYPE = `container_${type}_close`,
-    _tokens$idx = tokens[idx],
-    nesting = _tokens$idx.nesting,
-    info = _tokens$idx.info;
+  const END_TYPE = `container_${type}_close`
+  const _tokens$idx = tokens[idx]
+  const nesting = _tokens$idx.nesting
+  const info = _tokens$idx.info
 
   if (nesting === 1) { // 渲染开头的 ':::' 标记
-    let yamlStr = '';
+    let yamlStr = ''
 
     for (let i = idx; i < tokens.length; i++) {
-      let _tokens$i = tokens[i],
-        type = _tokens$i.type,
-        content = _tokens$i.content,
-        _info = _tokens$i.info;
-      if (type === END_TYPE) break; // 遇到结束的 ':::' 时
-      if (!content) continue;
+      const _tokens$i = tokens[i]
+      const type = _tokens$i.type
+      const content = _tokens$i.content
+      const _info = _tokens$i.info
+      if (type === END_TYPE)
+        break // 遇到结束的 ':::' 时
+      if (!content)
+        continue
       if (type === 'fence' && _info === 'yaml') { // 是代码块类型，并且是yaml代码
         yamlStr = content
       }
@@ -202,14 +206,14 @@ function renderCardList(tokens, idx, type) {
       if (dataObj) { // 正确解析出数据对象
         if (Array.isArray(dataObj)) {
           dataList = dataObj
-        } else {
+        }
+        else {
           config = dataObj.config
           dataList = dataObj.data
         }
       }
 
       if (dataList && dataList.length) { // 有列表数据
-
         // 每行显示几个
         let row = Number(info.split(' ').pop())
         if (!row || row > 4 || row < 1) {
@@ -219,29 +223,30 @@ function renderCardList(tokens, idx, type) {
         let listDOM = ''
         if (type === CARD_LIST) { // 普通卡片列表
           listDOM = getCardListDOM(dataList, row, config)
-        } else if (type === CARD_IMG_LIST) { // 卡片图片列表
+        }
+        else if (type === CARD_IMG_LIST) { // 卡片图片列表
           listDOM = getCardImgListDOM(dataList, row, config)
         }
 
         return `<div class="${type}Container"><div class="card-list">${listDOM}</div>`
       }
     }
-  } else { // 渲染':::' 结尾
+  }
+  else { // 渲染':::' 结尾
     return '</div>'
   }
 }
-
 
 // 将数据解析成DOM结构 - 普通卡片列表
 function getCardListDOM(dataList, row, config) {
   const { target = '_blank' } = config
   let listDOM = ''
-  dataList.forEach(item => {
+  dataList.forEach((item) => {
     listDOM += `
-      <${item.link ? 'a href="' + withBase(item.link) + '" target="' + target + '"' : 'span'} class="card-item ${row ? 'row-' + row : ''}"
-         style="${item.bgColor ? 'background-color:' + item.bgColor + ';--randomColor:' + item.bgColor + ';' : '--randomColor: var(--bodyBg);'}${item.textColor ? 'color:' + item.textColor + ';' : ''}"
+      <${item.link ? `a href="${withBase(item.link)}" target="${target}"` : 'span'} class="card-item ${row ? `row-${row}` : ''}"
+         style="${item.bgColor ? `background-color:${item.bgColor};--randomColor:${item.bgColor};` : '--randomColor: var(--bodyBg);'}${item.textColor ? `color:${item.textColor};` : ''}"
       >
-        ${item.avatar ? '<img src="' + withBase(item.avatar) + '" class="no-zoom">' : ''}
+        ${item.avatar ? `<img src="${withBase(item.avatar)}" class="no-zoom">` : ''}
         <div>
           <p class="name">${item.name}</p>
           <p class="desc">${item.desc}</p>
@@ -252,15 +257,14 @@ function getCardListDOM(dataList, row, config) {
   return listDOM
 }
 
-
 // 将数据解析成DOM结构 - 图文卡片列表
 function getCardImgListDOM(dataList, row, config) {
   const { imgHeight = 'auto', objectFit = 'cover', lineClamp = 1, target = '_blank' } = config
 
   let listDOM = ''
-  dataList.forEach(item => {
+  dataList.forEach((item) => {
     listDOM += `
-      <div class="card-item ${row ? 'row-' + row : ''}" >
+      <div class="card-item ${row ? `row-${row}` : ''}" >
         <a href="${withBase(item.link)}" target="${target}">
           <div class="box-img" style="height: ${imgHeight}">
               <img src="${withBase(item.img)}" class="no-zoom" style="object-fit: ${objectFit}">
@@ -270,10 +274,12 @@ function getCardImgListDOM(dataList, row, config) {
               ${item.desc ? `<p class="desc" style="-webkit-line-clamp: ${lineClamp}">${item.desc}</p>` : ''}
           </div>
 
-          ${item.avatar || item.author ? `<div class="box-footer">
+          ${item.avatar || item.author
+            ? `<div class="box-footer">
               ${item.avatar ? `<img src="${withBase(item.avatar)}" class="no-zoom">` : ''}
               ${item.author ? `<span>${item.author}</span>` : ''}
-          </div>`: ''}
+          </div>`
+            : ''}
         </a>
       </div>
     `
@@ -283,10 +289,12 @@ function getCardImgListDOM(dataList, row, config) {
 
 // 添加base路径
 function withBase(path) {
-  if (!path) return '';
+  if (!path)
+    return ''
   if (base && path.charAt(0) === '/') {
-    return base + path.slice(1);
-  } else {
-    return path;
+    return base + path.slice(1)
+  }
+  else {
+    return path
   }
 }

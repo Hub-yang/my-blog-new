@@ -1,12 +1,13 @@
+import type { VdoingThemeConfig } from 'vuepress-theme-vdoing/types'
+import type { UserPlugins } from 'vuepress/config'
 /**
  *js版本配置文件：https://github.com/xugaoyi/vuepress-theme-vdoing/tree/a2f03e993dd2f2a3afdc57cf72adfc6f1b6b0c32/docs/.vuepress
  */
-import { resolve } from "path";
-import { defineConfig4CustomTheme, UserPlugins } from "vuepress/config";
-import { VdoingThemeConfig } from "vuepress-theme-vdoing/types";
-import dayjs from "dayjs";
-import baiduCode from "./config/baiduCode"; // 百度统计hm码
-import { NAV } from "./config/catalogue";
+import { resolve } from 'node:path'
+import dayjs from 'dayjs'
+import { defineConfig4CustomTheme } from 'vuepress/config'
+import baiduCode from './config/baiduCode' // 百度统计hm码
+import { NAV } from './config/catalogue'
 // import htmlModules from "./config/htmlModules"; // 自定义插入的html块
 
 // 后期部署生成ip后进行修改
@@ -15,13 +16,13 @@ import { NAV } from "./config/catalogue";
 
 export default defineConfig4CustomTheme<VdoingThemeConfig>({
   // theme: "vdoing", // 使用npm主题包
-  theme: resolve(__dirname, "../../vdoing"), // 使用本地主题包
+  theme: resolve(__dirname, '../../vdoing'), // 使用本地主题包
 
   locales: {
-    "/": {
-      lang: "zh-CN",
-      title: "Hubery's blog",
-      description: "欢迎访问我的博客",
+    '/': {
+      lang: 'zh-CN',
+      title: 'Hubery\'s blog',
+      description: '欢迎访问我的博客',
     },
   },
   // base: "//", // 默认'/'。如果你想将你的网站部署到如 https://foo.github.io/bar/，那么 base 应该被设置成 "/bar/",（否则页面将失去样式等文件）
@@ -34,23 +35,23 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     //   appId: "WOEXURDK5F",
     // },
     // 导航配置
-    nav:NAV, 
+    nav: NAV,
     sidebarDepth: 2, // 侧边栏显示深度，默认1，最大2（显示到h3标题）
-    logo: "/img/avatar.png", // 导航栏logo
-    repo: "Hub-yang", // 导航栏右侧生成Github链接
+    logo: '/img/avatar.png', // 导航栏logo
+    repo: 'Hub-yang', // 导航栏右侧生成Github链接
     searchMaxSuggestions: 10, // 搜索结果显示最大数
-    lastUpdated: "上次更新", // 开启更新时间，并配置前缀文字   string | boolean (取值为git提交时间)
-    docsDir: "docs", // 编辑的文件夹
+    lastUpdated: '上次更新', // 开启更新时间，并配置前缀文字   string | boolean (取值为git提交时间)
+    docsDir: 'docs', // 编辑的文件夹
     // docsBranch: 'master', // 编辑的文件所在分支，默认master。 注意：如果你的分支是main则修改为main
     editLinks: false, // 启用编辑
-    editLinkText: "在github编辑此页",
+    editLinkText: '在github编辑此页',
 
-    //*** 以下是Vdoing主题相关配置，文档：https://doc.xugaoyi.com/pages/a20ce8/ ***//
+    //* ** 以下是Vdoing主题相关配置，文档：https://doc.xugaoyi.com/pages/a20ce8/ ***//
 
     // category: false, // 是否打开分类功能，默认true
     // tag: false, // 是否打开标签功能，默认true
     // archive: false, // 是否打开归档功能，默认true
-    categoryText: "随笔", // 碎片化文章（_posts文件夹的文章）预设生成的分类值，默认'随笔'
+    categoryText: '随笔', // 碎片化文章（_posts文件夹的文章）预设生成的分类值，默认'随笔'
 
     // pageStyle: "line", // 页面风格，可选值：'card'卡片 | 'line' 线（未设置bodyBgImg时才生效）， 默认'card'。 说明：card时背景显示灰色衬托出卡片样式，line时背景显示纯色，并且部分模块带线条边框
 
@@ -67,7 +68,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     updateBar: {
       // 最近更新栏
       showToArticle: true, // 显示到文章页底部，默认true
-      moreArticle: "/archives", // “更多文章”跳转的页面，默认'/archives'
+      moreArticle: '/archives', // “更多文章”跳转的页面，默认'/archives'
     },
     // rightMenuBar: false, // 是否显示右侧文章大纲栏，默认true (屏宽小于1300px下无论如何都不显示)
     // sidebarOpen: false, // 初始状态是否打开左侧边栏，默认true
@@ -77,19 +78,19 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     // defaultMode: 'auto',
 
     // 侧边栏  'structuring' | { mode: 'structuring', collapsable: Boolean} | 'auto' | <自定义>    温馨提示：目录页数据依赖于结构化的侧边栏数据，如果你不设置为'structuring',将无法使用目录页
-    sidebar: "structuring",
+    sidebar: 'structuring',
 
     // 文章默认的作者信息，(可在md文件中单独配置此信息) string | {name: string, link?: string}
     author: {
-      name: "HuberyYang", // 必需
-      link: "https://github.com/Hub-yang", // 可选的
+      name: 'HuberyYang', // 必需
+      link: 'https://github.com/Hub-yang', // 可选的
     },
 
     // 博主信息 (显示在首页侧边栏)
     blogger: {
-      avatar: "/logo.png",
-      name: "Hubery Yang",
-      slogan: "勤靡余劳，心有常闲",
+      avatar: '/logo.png',
+      name: 'Hubery Yang',
+      slogan: '勤靡余劳，心有常闲',
     },
 
     // 社交图标 (显示于博主信息栏和页脚栏。内置图标：https://doc.xugaoyi.com/pages/a20ce8/#social)
@@ -97,19 +98,19 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       // iconfontCssFile: '//at.alicdn.com/t/xxx.css', // 可选，阿里图标库在线css文件地址，对于主题没有的图标可自己添加。阿里图片库：https://www.iconfont.cn/
       icons: [
         {
-          iconClass: "icon-youjian",
-          title: "email",
-          link: "mailto:18830279823@163.com",
+          iconClass: 'icon-youjian',
+          title: 'email',
+          link: 'mailto:18830279823@163.com',
         },
         {
-          iconClass: "icon-github",
-          title: "GitHub",
-          link: "https://github.com/Hub-yang",
+          iconClass: 'icon-github',
+          title: 'GitHub',
+          link: 'https://github.com/Hub-yang',
         },
         {
-          iconClass: "icon-bilibili",
-          title: "Bilibili",
-          link: "https://space.bilibili.com/278851804?spm_id_from=333.999.0.0",
+          iconClass: 'icon-bilibili',
+          title: 'Bilibili',
+          link: 'https://space.bilibili.com/278851804?spm_id_from=333.999.0.0',
         },
       ],
     },
@@ -124,8 +125,8 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     // 扩展自动生成frontmatter。（当md文件的frontmatter不存在相应的字段时将自动添加。不会覆盖已有的数据。）
     extendFrontmatter: {
       author: {
-        name: "HuberyYang",
-        link: "https://github.com/Hub-yang",
+        name: 'HuberyYang',
+        link: 'https://github.com/Hub-yang',
       },
     },
 
@@ -135,24 +136,24 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
   // 注入到页面<head>中的标签，格式[tagName, { attrName: attrValue }, innerHTML?]
   head: [
-    ["link", { rel: "icon", href: "/img/favicon.ico" }], //favicons，资源放在public文件夹
+    ['link', { rel: 'icon', href: '/img/favicon.ico' }], // favicons，资源放在public文件夹
     // 看板娘
     [
-      "script",
+      'script',
       {
-        src: "https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js",
+        src: 'https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js',
       },
     ],
     [
-      "meta",
+      'meta',
       {
-        name: "keywords",
+        name: 'keywords',
         content:
-          "前端博客,个人技术博客,前端,前端开发,前端框架,web前端,前端面试题,技术文档,学习,面试,JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github,markdown",
+          '前端博客,个人技术博客,前端,前端开发,前端框架,web前端,前端面试题,技术文档,学习,面试,JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github,markdown',
       },
     ],
     // ["meta", { name: "baidu-site-verification", content: "7F55weZDDc" }], // 百度统计的站长验证（你可以去掉）
-    ["meta", { name: "theme-color", content: "#11a8cd" }], // 移动浏览器主题颜色
+    ['meta', { name: 'theme-color', content: '#11a8cd' }], // 移动浏览器主题颜色
     // [
     //   'script',
     //   {
@@ -172,10 +173,10 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     //   },
     // ],
 
-    "vuepress-plugin-baidu-autopush", // 百度自动推送
+    'vuepress-plugin-baidu-autopush', // 百度自动推送
 
     [
-      "vuepress-plugin-baidu-tongji", // 百度统计
+      'vuepress-plugin-baidu-tongji', // 百度统计
       {
         hm: baiduCode,
       },
@@ -185,45 +186,45 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     // 'fulltext-search',
     // 可以添加第三方搜索链接的搜索框（继承原官方搜索框的配置参数）
     [
-      "thirdparty-search",
+      'thirdparty-search',
       {
         thirdparty: [
           {
-            title: "在MDN中搜索",
-            frontUrl: "https://developer.mozilla.org/zh-CN/search?q=", // 搜索链接的前面部分
-            behindUrl: "", // 搜索链接的后面部分，可选，默认 ''
+            title: '在MDN中搜索',
+            frontUrl: 'https://developer.mozilla.org/zh-CN/search?q=', // 搜索链接的前面部分
+            behindUrl: '', // 搜索链接的后面部分，可选，默认 ''
           },
           {
-            title: "在百度中搜索",
-            frontUrl: "http://www.baidu.com/baidu?word=",
+            title: '在百度中搜索',
+            frontUrl: 'http://www.baidu.com/baidu?word=',
           },
           {
-            title: "在Google中搜索",
-            frontUrl: "https://www.google.com/search?q=",
+            title: '在Google中搜索',
+            frontUrl: 'https://www.google.com/search?q=',
           },
           {
-            title: "在Bing中搜索",
-            frontUrl: "https://cn.bing.com/search?q=",
+            title: '在Bing中搜索',
+            frontUrl: 'https://cn.bing.com/search?q=',
           },
         ],
       },
     ],
 
     [
-      "one-click-copy", // 代码块复制按钮
+      'one-click-copy', // 代码块复制按钮
       {
         copySelector: [
           'div[class*="language-"] pre',
           'div[class*="aside-code"] aside',
         ], // String or Array
-        copyMessage: "复制成功", // default is 'Copy successfully and then paste it for use.'
+        copyMessage: '复制成功', // default is 'Copy successfully and then paste it for use.'
         duration: 1000, // prompt message display time.
         showInMobile: false, // whether to display on the mobile side, default: false.
       },
     ],
 
     [
-      "demo-block", // demo演示模块 https://github.com/xiguaxigua/vuepress-plugin-demo-block
+      'demo-block', // demo演示模块 https://github.com/xiguaxigua/vuepress-plugin-demo-block
       {
         settings: {
           // jsLib: ['http://xxx'], // 在线示例(jsfiddle, codepen)中的js依赖
@@ -236,30 +237,30 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       },
     ],
     [
-      "vuepress-plugin-zooming", // 放大图片
+      'vuepress-plugin-zooming', // 放大图片
       {
-        selector: ".theme-vdoing-content img:not(.no-zoom)", // 排除class是no-zoom的图片
+        selector: '.theme-vdoing-content img:not(.no-zoom)', // 排除class是no-zoom的图片
         options: {
-          bgColor: "rgba(0,0,0,0.6)",
+          bgColor: 'rgba(0,0,0,0.6)',
         },
       },
     ],
     [
-      "vuepress-plugin-comment", // 评论
+      'vuepress-plugin-comment', // 评论
       {
-        choosen: "gitalk",
+        choosen: 'gitalk',
         options: {
-          clientID: "Ov23licwwJD6EoePXplN",
-          clientSecret: "8e647d24f7216ddea40f2c84bdcf6f94f00ce35a",
-          repo: "my-blog-new", // GitHub 仓库
-          owner: "Hub-yang", // GitHub仓库所有者
-          admin: ["Hub-yang"], // 对仓库有写权限的人
+          clientID: 'Ov23licwwJD6EoePXplN',
+          clientSecret: '8e647d24f7216ddea40f2c84bdcf6f94f00ce35a',
+          repo: 'my-blog-new', // GitHub 仓库
+          owner: 'Hub-yang', // GitHub仓库所有者
+          admin: ['Hub-yang'], // 对仓库有写权限的人
           // distractionFreeMode: true,
-          pagerDirection: "last", // 'first'正序 | 'last'倒序
-          id: "<%- (frontmatter.permalink || frontmatter.to.path).slice(-16) %>", //  页面的唯一标识,长度不能超过50
-          title: "「评论」<%- frontmatter.title %>", // GitHub issue 的标题
-          labels: ["Gitalk", "Comment"], // GitHub issue 的标签
-          body: "页面：<%- window.location.origin + (frontmatter.to.path || window.location.pathname) %>", // GitHub issue 的内容
+          pagerDirection: 'last', // 'first'正序 | 'last'倒序
+          id: '<%- (frontmatter.permalink || frontmatter.to.path).slice(-16) %>', //  页面的唯一标识,长度不能超过50
+          title: '「评论」<%- frontmatter.title %>', // GitHub issue 的标题
+          labels: ['Gitalk', 'Comment'], // GitHub issue 的标签
+          body: '页面：<%- window.location.origin + (frontmatter.to.path || window.location.pathname) %>', // GitHub issue 的内容
         },
 
         // choosen: "valine",
@@ -272,10 +273,10 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       },
     ],
     [
-      "@vuepress/last-updated", // "上次更新"时间格式
+      '@vuepress/last-updated', // "上次更新"时间格式
       {
-        transformer: (timestamp, lang) => {
-          return dayjs(timestamp).format("YYYY/MM/DD, HH:mm:ss");
+        transformer: (timestamp, _lang) => {
+          return dayjs(timestamp).format('YYYY/MM/DD, HH:mm:ss')
         },
       },
     ],
@@ -283,9 +284,9 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
   markdown: {
     lineNumbers: true,
-    extractHeaders: ["h2", "h3", "h4", "h5", "h6"], // 提取标题到侧边栏的级别，默认['h2', 'h3']
+    extractHeaders: ['h2', 'h3', 'h4', 'h5', 'h6'], // 提取标题到侧边栏的级别，默认['h2', 'h3']
   },
 
   // 监听文件变化并重新构建
-  extraWatchFiles: [".vuepress/config.ts", ".vuepress/config/htmlModules.ts"],
-});
+  extraWatchFiles: ['.vuepress/config.ts', '.vuepress/config/htmlModules.ts'],
+})

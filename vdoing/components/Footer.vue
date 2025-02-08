@@ -1,31 +1,3 @@
-<template>
-  <div class="footer">
-    <div class="icons" v-if="social && social.icons">
-      <a
-        :href="item.link"
-        :title="item.title"
-        :class="['iconfont', item.iconClass]"
-        v-for="(item, index) in social.icons"
-        :key="index"
-        target="_blank"
-      ></a>
-    </div>
-
-    <!--Vdoing主题遵循MIT协议，完全开源且免费。如果您对主题的修改并不大，希望您保留主题的链接。-->
-    Theme by
-    <a
-      href="https://github.com/xugaoyi/vuepress-theme-vdoing"
-      target="_blank"
-      title="本站主题"
-      >Vdoing</a
-    >
-    <template v-if="footer">
-      | Copyright © {{ footer.createYear }}-{{ new Date().getFullYear() }}
-      <span v-html="footer.copyrightInfo"></span>
-    </template>
-  </div>
-</template>
-
 <script>
 export default {
   computed: {
@@ -34,10 +6,37 @@ export default {
     },
     footer() {
       return this.$themeConfig.footer
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="footer">
+    <div v-if="social && social.icons" class="icons">
+      <a
+        v-for="(item, index) in social.icons"
+        :key="index"
+        :href="item.link" :title="item.title"
+        class="iconfont"
+        :class="[item.iconClass]"
+        target="_blank"
+      />
+    </div>
+
+    <!-- Vdoing主题遵循MIT协议，完全开源且免费。如果您对主题的修改并不大，希望您保留主题的链接。 -->
+    Theme by
+    <a
+      href="https://github.com/xugaoyi/vuepress-theme-vdoing"
+      target="_blank"
+      title="本站主题"
+    >Vdoing</a>
+    <template v-if="footer">
+      | Copyright © {{ footer.createYear }}-{{ new Date().getFullYear() }}
+      <span v-html="footer.copyrightInfo" />
+    </template>
+  </div>
+</template>
 
 <style lang='stylus'>
 // $mobileSidebarWidth = $sidebarWidth * 0.82

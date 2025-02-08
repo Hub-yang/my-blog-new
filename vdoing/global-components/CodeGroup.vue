@@ -1,3 +1,44 @@
+<script>
+export default {
+  name: 'CodeGroup',
+  data() {
+    return {
+      codeTabs: [],
+      activeCodeTabIndex: -1,
+    }
+  },
+  watch: {
+    activeCodeTabIndex(index) {
+      this.codeTabs.forEach((tab) => {
+        tab.elm.classList.remove('theme-code-block__active')
+      })
+      this.codeTabs[index].elm.classList.add('theme-code-block__active')
+    },
+  },
+  mounted() {
+    this.codeTabs = (this.$slots.default || []).filter(slot => Boolean(slot.componentOptions)).map((slot, index) => {
+      if (slot.componentOptions.propsData.active === '') {
+        this.activeCodeTabIndex = index
+      }
+
+      return {
+        title: slot.componentOptions.propsData.title,
+        elm: slot.elm,
+      }
+    })
+
+    if (this.activeCodeTabIndex === -1 && this.codeTabs.length > 0) {
+      this.activeCodeTabIndex = 0
+    }
+  },
+  methods: {
+    changeCodeTab(index) {
+      this.activeCodeTabIndex = index
+    },
+  },
+}
+</script>
+
 <template>
   <div class="theme-code-group">
     <div class="theme-code-group__nav">
@@ -10,7 +51,7 @@
           <button
             class="theme-code-group__nav-tab"
             :class="{
-              'theme-code-group__nav-tab-active': i === activeCodeTabIndex
+              'theme-code-group__nav-tab-active': i === activeCodeTabIndex,
             }"
             @click="changeCodeTab(i)"
           >
@@ -21,51 +62,9 @@
     </div>
     <slot />
     <pre v-if="codeTabs.length < 1" class="pre-blank">
-// Make sure to add code blocks to your code group</pre
-    >
+// Make sure to add code blocks to your code group</pre>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'CodeGroup',
-  data () {
-    return {
-      codeTabs: [],
-      activeCodeTabIndex: -1
-    }
-  },
-  watch: {
-    activeCodeTabIndex (index) {
-      this.codeTabs.forEach(tab => {
-        tab.elm.classList.remove('theme-code-block__active')
-      })
-      this.codeTabs[index].elm.classList.add('theme-code-block__active')
-    }
-  },
-  mounted () {
-    this.codeTabs = (this.$slots.default || []).filter(slot => Boolean(slot.componentOptions)).map((slot, index) => {
-      if (slot.componentOptions.propsData.active === '') {
-        this.activeCodeTabIndex = index
-      }
-
-      return {
-        title: slot.componentOptions.propsData.title,
-        elm: slot.elm
-      }
-    })
-
-    if (this.activeCodeTabIndex === -1 && this.codeTabs.length > 0) {
-      this.activeCodeTabIndex = 0
-    }
-  },
-  methods: {
-    changeCodeTab (index) {
-      this.activeCodeTabIndex = index
-    }
-  }
-}
-</script>
 
 <style lang="stylus" scoped>
 .theme-code-group, .theme-code-group__nav

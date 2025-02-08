@@ -1,16 +1,29 @@
+<script>
+export default {
+  computed: {
+    blogger() {
+      return this.$themeConfig.blogger
+    },
+    social() {
+      return this.$themeConfig.social
+    },
+  },
+}
+</script>
+
 <template>
   <aside class="blogger-wrapper card-box">
     <div class="avatar">
-      <img :src="blogger.avatar" alt="头像" title="我好看吗" />
+      <img :src="blogger.avatar" alt="头像" title="我好看吗">
     </div>
-    <div class="icons" v-if="social && social.icons && social.icons.length">
+    <div v-if="social && social.icons && social.icons.length" class="icons">
       <a
         v-for="(item, index) in social.icons"
         :key="index"
         :href="item.link"
         :title="item.title"
-        :class="['iconfont', item.iconClass]"
-        :style="{ width: 100 / social.icons.length + '%' }"
+        class="iconfont" :class="[item.iconClass]"
+        :style="{ width: `${100 / social.icons.length}%` }"
         target="_blank"
       />
     </div>
@@ -20,19 +33,6 @@
     </div>
   </aside>
 </template>
-
-<script>
-export default {
-  computed: {
-    blogger () {
-      return this.$themeConfig.blogger
-    },
-    social () {
-      return this.$themeConfig.social
-    }
-  }
-}
-</script>
 
 <style lang='stylus'>
 .blogger-wrapper

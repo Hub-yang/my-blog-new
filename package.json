@@ -1,6 +1,7 @@
 {
   "name": "hubery-personal-blog",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "dev": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js dev docs",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js build docs",
@@ -10,11 +11,14 @@
     "editFm": "node utils/editFrontmatter.js",
     "baiduPush": "node utils/baiduPush.js https://xugaoyi.com && bash baiduPush.sh",
     "publish": "cd ./vdoing && npm publish && cd .. && yarn updateTheme",
-    "updateTheme": "yarn remove vuepress-theme-vdoing && rm -rf node_modules && yarn && yarn add vuepress-theme-vdoing -D"
+    "updateTheme": "yarn remove vuepress-theme-vdoing && rm -rf node_modules && yarn && yarn add vuepress-theme-vdoing -D",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "license": "MIT",
   "devDependencies": {
+    "@antfu/eslint-config": "^4.1.1",
     "dayjs": "^1.9.7",
+    "eslint": "^9.20.0",
     "inquirer": "^7.1.0",
     "json2yaml": "^1.1.0",
     "vuepress": "1.9.9",

@@ -1,19 +1,38 @@
+<script>
+import NavLinks from '@theme/components/NavLinks.vue'
+import SidebarLinks from '@theme/components/SidebarLinks.vue'
+
+export default {
+  name: 'Sidebar',
+
+  components: { SidebarLinks, NavLinks },
+
+  props: ['items'],
+
+  computed: {
+    blogger() {
+      return this.$themeConfig.blogger
+    },
+  },
+}
+</script>
+
 <template>
   <aside class="sidebar">
-    <div class="blogger" v-if="blogger">
-      <img :src="blogger.avatar" />
+    <div v-if="blogger" class="blogger">
+      <img :src="blogger.avatar">
       <div class="blogger-info">
         <h3>{{ blogger.name }}</h3>
 
-        <div class="icons" v-if="blogger.social">
+        <div v-if="blogger.social" class="icons">
           <a
-            :href="item.link"
-            :title="item.title"
-            :class="['iconfont', item.iconClass]"
             v-for="(item, index) in blogger.social.icons"
             :key="index"
+            :href="item.link" :title="item.title"
+            class="iconfont"
+            :class="[item.iconClass]"
             target="_blank"
-          ></a>
+          />
         </div>
         <span v-else>{{ blogger.slogan }}</span>
       </div>
@@ -28,25 +47,6 @@
     <slot name="bottom" />
   </aside>
 </template>
-
-<script>
-import SidebarLinks from '@theme/components/SidebarLinks.vue'
-import NavLinks from '@theme/components/NavLinks.vue'
-
-export default {
-  name: 'Sidebar',
-
-  components: { SidebarLinks, NavLinks },
-
-  props: ['items'],
-
-  computed: {
-    blogger() {
-      return this.$themeConfig.blogger
-    }
-  }
-}
-</script>
 
 <style lang="stylus">
 .sidebar

@@ -1,49 +1,7 @@
-<template>
-  <div class="custom-page archives-page">
-    <div class="theme-vdoing-wrapper">
-      <h1>
-        <img
-          :src="currentBadge"
-          v-if="$themeConfig.titleBadge === false ? false : true"
-        />
-        {{ $page.title }}
-      </h1>
-      <div class="count">
-        总共 <i>{{ $sortPostsByDate.length }}</i> 篇文章
-      </div>
-      <ul>
-        <template v-for="(item, index) in postsList">
-          <li
-            class="year"
-            v-if="(year = getYear(index)) !== getYear(index - 1)"
-            :key="index + $sortPostsByDate.length"
-          >
-            <h2>
-              {{ year }}
-              <span>
-                <i>{{ countByYear[year] }}</i> 篇
-              </span>
-            </h2>
-          </li>
-          <li :key="index">
-            <router-link :to="item.path">
-              <span class="date">{{ getDate(item) }}</span>
-              {{ item.title }}
-              <span class="title-tag" v-if="item.frontmatter.titleTag">
-                {{ item.frontmatter.titleTag }}
-              </span>
-            </router-link>
-          </li>
-        </template>
-      </ul>
-    </div>
-  </div>
-</template>
-
 <script>
 import debounce from 'lodash.debounce'
-import { type } from '../util'
 import TitleBadgeMixin from '../mixins/titleBadge'
+import { type } from '../util'
 
 export default {
   mixins: [TitleBadgeMixin],
@@ -53,7 +11,7 @@ export default {
       countByYear: {}, // 根据年份统计的文章数
 
       perPage: 80, // 每页长
-      currentPage: 1// 当前页
+      currentPage: 1, // 当前页
 
     }
   },
@@ -63,7 +21,7 @@ export default {
     // 根据年份计算出文章数
     const { $sortPostsByDate, countByYear } = this
     for (let i = 0; i < $sortPostsByDate.length; i++) {
-      const { frontmatter: { date } } = $sortPostsByDate[i];
+      const { frontmatter: { date } } = $sortPostsByDate[i]
       if (date && type(date) === 'string') {
         const year = date.slice(0, 4)
         if (!countByYear[year]) {
@@ -79,15 +37,14 @@ export default {
       if (this.postsList.length < this.$sortPostsByDate.length) {
         const docEl = document.documentElement
         const docBody = document.body
-        const scrollTop = docEl.scrollTop || docBody.scrollTop;
-        const clientHeight = docEl.clientHeight || docBody.clientHeight;
-        const scrollHeight = docEl.scrollHeight || docBody.scrollHeight;
+        const scrollTop = docEl.scrollTop || docBody.scrollTop
+        const clientHeight = docEl.clientHeight || docBody.clientHeight
+        const scrollHeight = docEl.scrollHeight || docBody.scrollHeight
 
         if (scrollHeight > clientHeight && scrollTop + clientHeight >= scrollHeight - 250) {
           this.loadmore()
         }
       }
-
     }, 200))
   },
   methods: {
@@ -115,10 +72,52 @@ export default {
       if (date && type(date) === 'string') {
         return date.slice(5, 10)
       }
-    }
-  }
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="custom-page archives-page">
+    <div class="theme-vdoing-wrapper">
+      <h1>
+        <img
+          v-if="$themeConfig.titleBadge === false ? false : true"
+          :src="currentBadge"
+        >
+        {{ $page.title }}
+      </h1>
+      <div class="count">
+        总共 <i>{{ $sortPostsByDate.length }}</i> 篇文章
+      </div>
+      <ul>
+        <template v-for="(item, index) in postsList">
+          <li
+            v-if="(year = getYear(index)) !== getYear(index - 1)"
+            :key="index + $sortPostsByDate.length"
+            class="year"
+          >
+            <h2>
+              {{ year }}
+              <span>
+                <i>{{ countByYear[year] }}</i> 篇
+              </span>
+            </h2>
+          </li>
+          <li :key="index">
+            <router-link :to="item.path">
+              <span class="date">{{ getDate(item) }}</span>
+              {{ item.title }}
+              <span v-if="item.frontmatter.titleTag" class="title-tag">
+                {{ item.frontmatter.titleTag }}
+              </span>
+            </router-link>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </div>
+</template>
 
 <style lang='stylus'>
 @require '../styles/wrapper.styl'

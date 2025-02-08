@@ -1,24 +1,24 @@
-<template>
-  <div class="theme-code-block" :class="{ 'theme-code-block__active': active }">
-    <slot />
-  </div>
-</template>
-
 <script>
 export default {
   name: 'CodeBlock',
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     active: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 }
 </script>
+
+<template>
+  <div class="theme-code-block" :class="{ 'theme-code-block__active': active }">
+    <slot />
+  </div>
+</template>
 
 <style scoped>
 .theme-code-block {
