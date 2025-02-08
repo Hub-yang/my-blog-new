@@ -58,7 +58,8 @@ export default {
       }
     },
     handleEmit(i) {
-      this.$emit('getCurrentPage', i)
+      // eslint-disable-next-line vue/require-explicit-emits, vue/custom-event-name-casing
+      this.$emit('get-current-page', i)
     },
   },
 }
