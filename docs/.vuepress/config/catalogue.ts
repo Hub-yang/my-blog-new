@@ -52,16 +52,23 @@ export const NAV = [
     ],
   },
   {
-    text: '刷题',
-    link: '/ui/',
+    text: '源码',
+    link: '/code/',
     items: [
-      {
-        text: '简单',
-        items: [{ text: '搜索插入位置', link: '/pages/8309a5b876fc95e3/' }],
-      },
-      { text: '中等', link: 'javascript:;' },
+
     ],
   },
+  // {
+  //   text: '刷题',
+  //   link: '/ui/',
+  //   items: [
+  //     {
+  //       text: '简单',
+  //       items: [{ text: '搜索插入位置', link: '/pages/8309a5b876fc95e3/' }],
+  //     },
+  //     { text: '中等', link: 'javascript:;' },
+  //   ],
+  // },
   {
     text: '读书',
     link: '/technology/',
